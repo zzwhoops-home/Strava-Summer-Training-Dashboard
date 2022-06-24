@@ -46,8 +46,14 @@ export default function HomePage() {
             <Steps toDisplay={3} />
             <Header title="So why sign up?" />
             <Purpose />
-            <Link href="/database">
-                <a>To Database</a>
+            <Link href="/database" passHref>
+                <Image
+                    src="/strava_button_orange.png"
+                    layout="intrinsic"
+                    width={193}
+                    height={48}
+                    srcSet="2x"
+                />
             </Link>
 
         </div>
