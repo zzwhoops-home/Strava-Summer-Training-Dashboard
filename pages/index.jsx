@@ -37,7 +37,6 @@ function Purpose() {
     )
 }
 
-
 export default function HomePage() {
     return (
         <div>
@@ -46,14 +45,16 @@ export default function HomePage() {
             <Steps toDisplay={3} />
             <Header title="So why sign up?" />
             <Purpose />
-            <Link href="/database" passHref>
-                <Image
-                    src="/strava_button_orange.png"
-                    layout="intrinsic"
-                    width={193}
-                    height={48}
-                    srcSet="2x"
-                />
+            <Link href={`https://www.strava.com/oauth/authorize?client_id=${process.env.STRAVA_CLIENT_ID}&response_type=code&redirect_uri=${process.env.STRAVA_REDIRECT_URL}&scope=activity:read_all`} passHref>
+                <a>
+                    <Image
+                        src="/strava_button_orange.png"
+                        layout="intrinsic"
+                        width={193}
+                        height={48}
+                        srcSet="2x"
+                    />
+                </a>
             </Link>
 
         </div>
