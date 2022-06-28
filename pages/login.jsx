@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import Router, { useRouter } from "next/router";
-import Tokens from "./api/tokens";
-import useSWR from "swr";
 import Link from 'next/link';
 
 export async function getServerSideProps(ctx) {
@@ -46,11 +44,28 @@ function LoggedIn({ props }) {
     if (props.response) {
         return (<Error response={props.response}/>);
     } else {
-        
+        return (<h>One moment, fetching your data...</h>)
     }
 }
 
 export default function LoginPage(props) {
+    const headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+
+    useEffect(() => {
+        const data = async () => { 
+            const response = await fetch(`api/tokens?code=${props.data.code}&scope=${props.data.scope}`, {
+                method: 'GET',
+                "headers": headers
+            });
+            const a = await response.json();
+            console.log(a);
+        }
+        data();
+    }, []);
+
     return (
         <LoggedIn props={props}/>
     )
