@@ -1,5 +1,3 @@
-import clientPromise from "../lib/mongodb";
-
 export default async function Authorization(req, res) {
     const code = req.query.code;
     const scope = req.query.scope;
