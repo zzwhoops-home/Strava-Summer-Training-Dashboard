@@ -1,4 +1,4 @@
-import clientPromise from "./lib/mongodb";
+import clientPromise from "../lib/mongodb";
 import Link from 'next/link';
 
 export async function getServerSideProps() {
