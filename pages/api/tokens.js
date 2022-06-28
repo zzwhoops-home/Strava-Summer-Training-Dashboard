@@ -1,6 +1,5 @@
 export default async function Tokens(req, res) {
-    const url = ``;
-    console.log(url);
+    const url = `https://www.strava.com/oauth/token`;
     const response = await fetch(url);
     const jsonRes = response.json();
     
