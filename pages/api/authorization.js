@@ -1,5 +1,8 @@
-export default async function Tokens(req, res) {
-    const refreshToken = req.query.refreshToken;
+import clientPromise from "../lib/mongodb";
+
+export default async function Authorization(req, res) {
+    const code = req.query.code;
+    const scope = req.query.scope;
 
     const headers = {
         'Accept': 'application/json',
@@ -9,8 +12,8 @@ export default async function Tokens(req, res) {
     const body = JSON.stringify({
         client_id: process.env.STRAVA_CLIENT_ID,
         client_secret: process.env.STRAVA_CLIENT_SECRET,
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken
+        code: code,
+        grant_type: 'authorization_code'
     })
     
     const url = "https://www.strava.com/oauth/token";

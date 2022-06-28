@@ -55,18 +55,20 @@ export default function LoginPage(props) {
     }
 
     useEffect(() => {
-        const data = async () => { 
-            const response = await fetch(`api/tokens?code=${props.data.code}&scope=${props.data.scope}`, {
+        const authorize = async () => { 
+            const response = await fetch(`api/authorization?code=${props.data.code}&scope=${props.data.scope}`, {
                 method: 'GET',
                 "headers": headers
             });
-            const a = await response.json();
-            console.log(a);
+            const data = await response.json();
+            console.log(data);
         }
-        data();
+        authorize();
     }, []);
 
     return (
-        <LoggedIn props={props}/>
+        <>
+            <LoggedIn props={props}/>
+        </>
     )
 }
