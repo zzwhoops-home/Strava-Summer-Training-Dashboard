@@ -1,7 +1,7 @@
 import clientPromise from "../../lib/mongodb";
 import { serverURL } from "../../config";
 
-export default async function ReAuthorization(req, res) {
+export default async function RefreshTokens(req, res) {
     // query DB
     const client = await clientPromise;
     const db = client.db(process.env.DB);
