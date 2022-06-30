@@ -18,7 +18,7 @@ export default async function Authorization(req, res) {
     const authURL = "https://www.strava.com/oauth/token";
     const authResponse = await fetch(authURL, {
         method: 'POST',
-        headers: authHeaders,
+        headers: headers,
         body: authBody
     });
     const authResponseJSON = await authResponse.json();
@@ -37,14 +37,19 @@ export default async function Authorization(req, res) {
         access_token: authResponseJSON.access_token,
         refresh_token: authResponseJSON.refresh_token
     }
+    console.log(bodyDB);
 
-    const responseDB = await fetch(`api/authorization?code=${props.data.code}&scope=${props.data.scope}`, {
+    const responseDB = await fetch(`api/accessEntries`, {
         method: 'POST',
         headers: headers,
         body: bodyDB
     });
-    const data = await responseDB.json();
-    console.log(data);
+    const responseDBJSON = await responseDB.json();
+    console.log(responseDBJSON);
+
+    return res.status(200).json({
+        responseDBJSON
+    });
 
     // check if the response is bad request. if not, query DB
     if (jsonRes.message == "Bad Request") {
