@@ -5,7 +5,10 @@ export default async function AccessEntries(req, res) {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const accessTokens = db.collection("access_tokens");
+    const refreshTokens = db.collection("refresh_tokens");
+    const athleteInfo = db.collection("athlete_info");
 
+    // use ObjectId.getTimestamp() to get join date
     switch (req.method) {
         case 'GET':
             break;
