@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import Router, { useRouter } from "next/router";
 import Link from 'next/link';
+import { requiredScopes } from "../config";
 
 export async function getServerSideProps(ctx) {
-    const requiredScopes = "read,activity:read_all";
     // get url params
     const query = await ctx.query;
     let response = null;
@@ -41,34 +41,34 @@ function Error({ response }) {
 }
 
 function LoggedIn({ props }) {
-    if (props.response) {
-        return (<Error response={props.response}/>);
-    } else {
-        return (<h>One moment, fetching your data...</h>)
-    }
+    return (<h>One moment, fetching your data...</h>)
 }
 
 export default function LoginPage(props) {
-    const headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-
-    useEffect(() => {
-        const authorize = async () => { 
-            const response = await fetch(`api/authorization?code=${props.data.code}&scope=${props.data.scope}`, {
-                method: 'GET',
-                "headers": headers
-            });
-            const data = await response.json();
-            console.log(data);
+    if (props.response) {
+        return (
+            <Error response={props.response}/>
+        );
+    } else {
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
-        authorize();
-    }, []);
+    
+        useEffect(() => {
+            const authorize = async () => { 
+                const response = await fetch(`api/authorization?code=${props.data.code}&scope=${props.data.scope}`, {
+                    method: 'GET',
+                    "headers": headers
+                });
+                const data = await response.json();
+                console.log(data);
+            }
+            authorize();
+        }, []);
 
-    return (
-        <>
-            <LoggedIn props={props}/>
-        </>
-    )
+        return (
+            <LoggedIn />
+        );
+    }
 }

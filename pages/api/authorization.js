@@ -1,3 +1,6 @@
+import { serverURL } from "../../config";
+import { requiredScopes } from "../../config";
+
 export default async function Authorization(req, res) {
     const code = req.query.code;
     const scope = req.query.scope;
@@ -30,16 +33,16 @@ export default async function Authorization(req, res) {
     
     // authResponseJSON.athlete.id
 
-    const athlete = authResponseJSON.athlete;
-    const bodyDB = {
-        athlete: athlete,
+    const bodyDB = JSON.stringify({
+        athlete: authResponseJSON.athlete,
         expires_at: authResponseJSON.expires_at,
         access_token: authResponseJSON.access_token,
-        refresh_token: authResponseJSON.refresh_token
-    }
+        refresh_token: authResponseJSON.refresh_token,
+        scope: (requiredScopes == scope) ? true : false
+    });
     console.log(bodyDB);
 
-    const responseDB = await fetch(`api/accessEntries`, {
+    const responseDB = await fetch(`${serverURL}/api/accessEntries`, {
         method: 'POST',
         headers: headers,
         body: bodyDB
