@@ -6,7 +6,10 @@ export async function getServerSideProps() {
     const db = client.db(process.env.DB);
     const access_tokens = db.collection("access_tokens");
 
-    const data = await access_tokens.find({}).toArray();
+    const query = {
+        id: id
+    }
+    const data = await access_tokens.find(query).toArray();
 
     const aTokens = JSON.parse(JSON.stringify(data));
 

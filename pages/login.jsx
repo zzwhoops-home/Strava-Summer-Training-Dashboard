@@ -61,8 +61,7 @@ export default function LoginPage(props) {
                     method: 'GET',
                     "headers": headers
                 });
-                const data = await response.json();
-                console.log(data);
+                
             }
             authorize();
         }, []);

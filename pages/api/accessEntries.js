@@ -1,5 +1,3 @@
-import { profile } from "console";
-import { access } from "fs";
 import clientPromise from "../../lib/mongodb";
 
 export default async function AccessEntries(req, res) {

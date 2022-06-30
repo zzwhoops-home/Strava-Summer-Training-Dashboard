@@ -33,6 +33,13 @@ export default async function Authorization(req, res) {
     
     // authResponseJSON.athlete.id
 
+    // check if the response is bad request. if not, query DB
+    if (authResponseJSON.message == "Bad Request") {
+        return res.status(400).json({
+            message: "Code expired, try authorization again."
+        });
+    }
+
     const bodyDB = JSON.stringify({
         athlete: authResponseJSON.athlete,
         expires_at: authResponseJSON.expires_at,
@@ -42,51 +49,13 @@ export default async function Authorization(req, res) {
     });
     console.log(bodyDB);
 
-    const responseDB = await fetch(`${serverURL}/api/accessEntries`, {
+    await fetch(`${serverURL}/api/accessEntries`, {
         method: 'POST',
         headers: headers,
         body: bodyDB
     });
-    const responseDBJSON = await responseDB.json();
-    console.log(responseDBJSON);
-
-    return res.status(200).json({
-        responseDBJSON
-    });
-
-    // check if the response is bad request. if not, query DB
-    if (jsonRes.message == "Bad Request") {
-        return res.status(400).json({
-            message: "Please try authorization again."
-        });
-    } else {
-        // query DB
-
-        const headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
     
-        // access token parameters
-        const body = {
-            client_id: process.env.STRAVA_CLIENT_ID,
-            client_secret: process.env.STRAVA_CLIENT_SECRET,
-            grant_type: 'refresh_token',
-            refresh_token: refreshToken // change to whatever refreshtoken actually is
-        }
-        
-        const url = "https://www.strava.com/oauth/token";
-        const response = await fetch(url, {
-            method: 'POST',
-            "headers": headers,
-            "body": body
-        });
-        const jsonRes = await response.json();
-
-
-        return res.status(200).json({
-            jsonRes
-        });
-    }
-
+    return res.status(200).send({
+        message: `${authResponseJSON.athlete.id}'s data has been updated.`
+    });
 }
