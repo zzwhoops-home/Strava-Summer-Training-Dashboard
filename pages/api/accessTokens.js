@@ -12,7 +12,7 @@ export default async function AccessTokens(req, res) {
 
 
     // GET requests should send a query in this format:
-    // ...?id=someId
+    // ...?id=athleteId
     // POST requests should send a body in this format:
     // {
     //     athlete: athleteInfoFromStravaAPI,
@@ -24,21 +24,22 @@ export default async function AccessTokens(req, res) {
 
     // GET method: retrieve access token from database, if it is invalid, call API route to refresh it.
     if (req.method == 'GET') {
-        const id = req.query.id;
+        const athleteId = req.query.id;
 
         const headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
 
-        const accessURL = `${serverURL}/api/refreshTokens?id=${id}`;
-        await fetch(accessURL, {
+        const refreshURL = `${serverURL}/api/refreshTokens?id=${athleteId}`;
+        const refreshResponse =  await fetch(refreshURL, {
             method: 'GET',
             headers: headers
         });
+        const refreshResponseJSON = await refreshResponse.json();
 
         return res.status(200).json({
-            message: "success?"
+            access_token: refreshResponseJSON.valid_access_token
         });
 
     } 
@@ -48,7 +49,7 @@ export default async function AccessTokens(req, res) {
         const athlete = authResponse.athlete;
 
         // match user ID
-        const query = {
+        const filter = {
             id: athlete.id
         }
 
@@ -75,9 +76,9 @@ export default async function AccessTokens(req, res) {
             avatar_link: athlete.profile
         }
 
-        await accessTokens.findOneAndReplace(query, accessTokenData, { upsert: true });
-        await refreshTokens.findOneAndReplace(query, refreshTokenData, { upsert: true })
-        await athleteInfo.findOneAndReplace(query, athleteData, { upsert: true });
+        await accessTokens.findOneAndReplace(filter, accessTokenData, { upsert: true });
+        await refreshTokens.findOneAndReplace(filter, refreshTokenData, { upsert: true })
+        await athleteInfo.findOneAndReplace(filter, athleteData, { upsert: true });
 
         return res.status(200).send({ message: "Update probably successful" });
     } else {

@@ -3,49 +3,97 @@ import { serverURL } from "../../config";
 
 export default async function RefreshTokens(req, res) {
     const curTime = Math.floor(Date.now() / 1000);
-    
+    let validAccessToken;
+
     // query DB
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const accessTokens = db.collection("access_tokens");
     const refreshTokens = db.collection("refresh_tokens");
-    const id = await req.query.id;
-    
-    // convert query string to number
-    const query = {
-        id: parseInt(id)
+    // convert query string into number
+    const id = await parseInt(req.query.id);
+    var queryDB = {
+        id: id
+    }
+
+    const accessResponse = await accessTokens.findOne(queryDB);
+    const accessResponseJSON = await JSON.parse(JSON.stringify(accessResponse));
+    validAccessToken = accessResponseJSON.access_token;
+
+    if (!accessResponseJSON) {
+        return res.status(404).send({
+            message: "An athlete with this ID was not found!"
+        });
     }
     
-    const response = await accessTokens.findOne(query);
-    const responseJSON = await JSON.parse(JSON.stringify(response));
-    console.log(responseJSON);
+    if (curTime >= accessResponseJSON.expires_at) {
+        const refreshResponse = await refreshTokens.findOne(queryDB);
+        const refreshResponseJSON = await JSON.parse(JSON.stringify(refreshResponse));
 
-    if (curTime >= responseJSON.expires_at) {
         const headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
     
         // access token parameters
-        const body = {
-            client_id: process.env.STRAVA_CLIENT_ID,
+        const body = JSON.stringify({
+            client_id: await parseInt(process.env.STRAVA_CLIENT_ID),
             client_secret: process.env.STRAVA_CLIENT_SECRET,
             grant_type: 'refresh_token',
-            refresh_token: refreshToken // change to whatever refreshtoken actually is
-        }
+            refresh_token: refreshResponseJSON.refresh_token
+        });
         
         const url = "https://www.strava.com/oauth/token";
-        const response = await fetch(url, {
+        const newTokenResponse = await fetch(url, {
             method: 'POST',
             "headers": headers,
             "body": body
         });
-        const jsonRes = await response.json();
-    }
-    
+        const newTokenResponseJSON = await newTokenResponse.json();
 
+        if (!newTokenResponseJSON) {
+            return res.status(404).send({
+                message: "Error retrieving new access token from Strava."
+            });  
+        }
+
+        const athleteId = accessResponseJSON.id;
+        const newAccessToken = newTokenResponseJSON.access_token;
+        const newExpiresAt = newTokenResponseJSON.expires_at;
+        const newRefreshToken = newTokenResponseJSON.refresh_token;
+
+        // may be a good idea to have a separate API endpoint that only uses findOneAndUpdate
+        // match user ID
+        const filter = {
+            id: athleteId
+        }
+
+        const accessTokenData = {
+            $set: {                    
+                id: athleteId,
+                access_token: newAccessToken,
+                expires_at: newExpiresAt
+            }
+        }
+
+        // be absolutely sure we're not replacing refresh tokens with null values
+        if (newRefreshToken) {
+            const refreshTokenData = {
+                $set: {
+                    id: athleteId,
+                    refresh_token: newRefreshToken
+                }
+            }
+            await refreshTokens.findOneAndUpdate(filter, refreshTokenData, { upsert: true });
+        }
+        await accessTokens.findOneAndUpdate(filter, accessTokenData, { upsert: true });
+        
+        // replace what we are returning with our new access token
+        validAccessToken = newAccessToken;
+    }
 
     return res.status(200).json({
-        responseJSON
+        message: "Update successful",
+        valid_access_token: validAccessToken
     });
 }
