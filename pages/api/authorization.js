@@ -47,15 +47,15 @@ export default async function Authorization(req, res) {
         refresh_token: authResponseJSON.refresh_token,
         scope: (requiredScopes == scope) ? true : false
     });
-    console.log(bodyDB);
 
-    await fetch(`${serverURL}/api/accessEntries`, {
+    await fetch(`${serverURL}/api/accessTokens`, {
         method: 'POST',
         headers: headers,
         body: bodyDB
     });
     
-    return res.status(200).send({
-        message: `${authResponseJSON.athlete.id}'s data has been updated.`
+    return res.status(200).json({
+        message: `${authResponseJSON.athlete.id}'s data has been updated.`,
+        id: authResponseJSON.athlete.id
     });
 }

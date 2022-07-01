@@ -1,6 +1,7 @@
 import clientPromise from "../../lib/mongodb";
+import { serverURL } from "../../config";
 
-export default async function AccessEntries(req, res) {
+export default async function AccessTokens(req, res) {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const accessTokens = db.collection("access_tokens");
@@ -9,10 +10,40 @@ export default async function AccessEntries(req, res) {
 
     // use ObjectId.getTimestamp() to get join date
 
-    // switch bad
-    if (req.method == 'GET') {
 
-    } else if (req.method == 'POST') {
+    // GET requests should send a query in this format:
+    // ...?id=someId
+    // POST requests should send a body in this format:
+    // {
+    //     athlete: athleteInfoFromStravaAPI,
+    //     expires_at: whenAccessTokenExpires,
+    //     access_token: accessToken,
+    //     refresh_token: refreshToken,
+    //     scope: true or false
+    // }
+
+    // GET method: retrieve access token from database, if it is invalid, call API route to refresh it.
+    if (req.method == 'GET') {
+        const id = req.query.id;
+
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+
+        const accessURL = `${serverURL}/api/refreshTokens?id=${id}`;
+        await fetch(accessURL, {
+            method: 'GET',
+            headers: headers
+        });
+
+        return res.status(200).json({
+            message: "success?"
+        });
+
+    } 
+    // POST method: body in format above, queries database to add a new user. Not used for updating entries.
+    else if (req.method == 'POST') {
         const authResponse = req.body;
         const athlete = authResponse.athlete;
 

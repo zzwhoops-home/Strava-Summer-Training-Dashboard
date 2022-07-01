@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import Router, { useRouter } from "next/router";
 import Link from 'next/link';
 import { requiredScopes } from "../config";
+import { useEffect } from "react";
+import Router, { useRouter } from "next/router";
 
 export async function getServerSideProps(ctx) {
     // get url params
@@ -45,6 +45,8 @@ function LoggedIn({ props }) {
 }
 
 export default function LoginPage(props) {
+    const router = useRouter();
+
     if (props.response) {
         return (
             <Error response={props.response}/>
@@ -61,7 +63,10 @@ export default function LoginPage(props) {
                     method: 'GET',
                     "headers": headers
                 });
-                
+                const responseJSON = await response.json()
+                const id = await responseJSON.id;
+
+                await router.push(`/user/${id}`);
             }
             authorize();
         }, []);

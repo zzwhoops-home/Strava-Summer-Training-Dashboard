@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -11,7 +12,7 @@ function ListItem(props) {
 }
 
 function Steps({ toDisplay }) {
-    let steps = ["Register for a Strava account", "Join the Princeton XC/TF Summer Training Club", "View your club on this website!"]
+    let steps = ["Register for a Strava account", "Join the Princeton XC/TF Summer Training Club", "Login with your Strava account here", "View your club on this website!"]
     steps = steps.slice(0, toDisplay);
     
     return (
@@ -26,7 +27,7 @@ function Steps({ toDisplay }) {
     )
 }
 function Purpose() {
-    const reasons = ["Motivate each other through friendly competition", `Have fun beating up mascots from other schools`, "Make the effort I spent on this worth it"]
+    const reasons = ["Motivate each other through friendly competition", `Have fun beating up mascots from other schools`, "This was a lot of work"]
 
     return (
         <ul style={{listStyleType: "none"}}>
@@ -42,10 +43,10 @@ export default function HomePage() {
         <div>
             <Header title="Strava Summer Dashboard" italic={true} />
             <Header title="Welcome!" />
-            <Steps toDisplay={3} />
+            <Steps toDisplay={4} />
             <Header title="So why sign up?" />
             <Purpose />
-            <Link href={`https://www.strava.com/oauth/authorize?client_id=${process.env.STRAVA_CLIENT_ID}&response_type=code&redirect_uri=${process.env.STRAVA_REDIRECT_URL}&scope=activity:read_all`} passHref>
+            <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=http://localhost:3000/login/&scope=activity:read_all`} passHref>
                 <a>
                     <Image
                         src="/strava_button_orange.png"
