@@ -57,6 +57,11 @@ export default function HomePage() {
                     />
                 </a>
             </Link>
+            <Link href={"/"} passHref>
+                <a>
+                    <h2>View your clubs</h2>
+                </a>
+            </Link>
 
         </div>
     )
