@@ -10,9 +10,6 @@ export default async function AccessTokens(req, res) {
 
     // use ObjectId.getTimestamp() to get join date
 
-
-    // GET requests should send a query in this format:
-    // ...?id=athleteId
     // POST requests should send a body in this format:
     // {
     //     athlete: athleteInfoFromStravaAPI,
@@ -22,29 +19,8 @@ export default async function AccessTokens(req, res) {
     //     scope: true or false
     // }
 
-    // GET method: retrieve access token from database, if it is invalid, call API route to refresh it.
-    if (req.method == 'GET') {
-        const athleteId = req.query.id;
-
-        const headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-
-        const refreshURL = `${serverURL}/api/refreshTokens?id=${athleteId}`;
-        const refreshResponse =  await fetch(refreshURL, {
-            method: 'GET',
-            headers: headers
-        });
-        const refreshResponseJSON = await refreshResponse.json();
-
-        return res.status(200).json({
-            access_token: refreshResponseJSON.valid_access_token
-        });
-
-    } 
     // POST method: body in format above, queries database to add a new user. Not used for updating entries.
-    else if (req.method == 'POST') {
+    if (req.method == 'POST') {
         const authResponse = req.body;
         const athlete = authResponse.athlete;
 

@@ -1,7 +1,13 @@
 import clientPromise from "../../lib/mongodb";
-import { serverURL } from "../../config";
 
 export default async function RefreshTokens(req, res) {
+    // GET requests should send a query in this format:
+    // ...?id=athleteId
+    // GET method: retrieve access token from database, if it is invalid, call API route to refresh it.
+    if (req.method != 'GET') {
+        return res.status(405).send({ message: "You may only send GET requests to this endpoint. "});
+    }
+
     const curTime = Math.floor(Date.now() / 1000);
     let validAccessToken;
 
@@ -16,15 +22,14 @@ export default async function RefreshTokens(req, res) {
         id: id
     }
 
+    // see if access token exists. return 404 if it doesn't exist yet (id is not valid or user has not authorized it)
     const accessResponse = await accessTokens.findOne(queryDB);
     const accessResponseJSON = await JSON.parse(JSON.stringify(accessResponse));
+    if (!accessResponse) {
+        return res.status(404).send({ message: "An athlete with this ID was not found!" });
+    }
     validAccessToken = accessResponseJSON.access_token;
 
-    if (!accessResponseJSON) {
-        return res.status(404).send({
-            message: "An athlete with this ID was not found!"
-        });
-    }
     
     if (curTime >= accessResponseJSON.expires_at) {
         const refreshResponse = await refreshTokens.findOne(queryDB);
