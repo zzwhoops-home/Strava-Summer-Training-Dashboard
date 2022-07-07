@@ -1,4 +1,3 @@
-import clientPromise from '../../lib/mongodb';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { serverURL } from '../../config';
@@ -7,10 +6,10 @@ import { getCookie } from 'cookies-next';
 
 export async function getServerSideProps(req, res) {
     const clubId = parseInt(req.query.id);
-    const athleteId = getCookie('athleteId', { req, res });
-    const client = await clientPromise;
-    const db = client.db(process.env.DB);
-    const athleteInfo = db.collection("athlete_info");
+    const athleteId = req.req.cookies.athleteId;
+    console.log(athleteId);
+    // const client = await clientPromise;
+    // const db = client.db(process.env.DB);
 
     // get valid access token from API endpoint
     const headers = {
@@ -18,7 +17,7 @@ export async function getServerSideProps(req, res) {
         'Content-Type': 'application/json'
     }
 
-    const accessResponse = await fetch(`${serverURL}api/refreshTokens?id=${athleteId}`, {
+    const accessResponse = await fetch(`${serverURL}/api/refreshTokens?id=${athleteId}`, {
         method: 'GET',
         headers: headers
     });
@@ -37,26 +36,30 @@ export async function getServerSideProps(req, res) {
         const response = await fetch(url);
         return await response.json();
     }
+    // get club name again - create api endpoint to add to db so we don't have to waste requests
+    const clubURL = `https://www.strava.com/api/v3/clubs/${clubId}?access_token=${accessToken}`;
+    const clubResponse = await getData(clubURL);
+
     // get required data
-    const activitiesURL = `https://www.strava.com/api/v3/clubs/{id}/activities?page=1&per_page=200access_token=${accessToken}`;
+    const activitiesURL = `https://www.strava.com/api/v3/clubs/${clubId}/activities?page=1&per_page=100&access_token=${accessToken}`;
     const activitiesResponseJSON = await getData(activitiesURL);
 
     return ({
         props: {
+            clubName: clubResponse.name,
             activities: activitiesResponseJSON
         }
     });
 }
 
-function ListClubs({ clubs }) {
+function ListActivities({ activities }) {
     return (
         <>
             <ol style={{listStyleType: "none"}}>
-                {clubs.map((club=value) => (
-                    <li key={club.id}>
-                        <Link href={`${serverURL}/clubs/${club.id}`}>(Click here)</Link>
-                        {` ${club.name}: ${club.member_count} members`}
-                    </li>
+                {activities.map((activity=value, index=index) => (
+                    <li key={index}>
+                        <p>{`(${index} - ${activity.athlete.firstname} ${activity.athlete.lastname})`} <strong>{`${activity.name}:`}</strong> {`${activity.distance}m`}</p>
+                    </li>                    
                 ))}
             </ol>
         </>
@@ -67,15 +70,21 @@ export default function Clubs(props) {
     if (props.errorCode) {
         return (<ClubNotFound />);
     }
-    const athlete = props.athlete;
+    const activities = props.activities;
+    let dist = 0;
+    activities.forEach(distanceSum);
+    function distanceSum(activity) {
+        dist += activity.distance;
+    }
 
     return (
         <>
             <div className='header'>
-                <h1>User: {`${athlete.first_name} ${athlete.last_name}`}</h1>
+                <h1>Club: {`${props.clubName}`}</h1>
             </div>
-            <div className='stats'>
-                <ListClubs clubs={props.clubs}/>
+            <h1>Total Distance: {`${dist.toLocaleString()}m`}</h1>
+            <div className='activities'>
+                <ListActivities activities={activities}/>
             </div>
 
             <Link href="/">
