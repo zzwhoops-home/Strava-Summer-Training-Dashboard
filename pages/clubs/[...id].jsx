@@ -58,7 +58,7 @@ function ListActivities({ activities }) {
             <ol style={{listStyleType: "none"}}>
                 {activities.map((activity=value, index=index) => (
                     <li key={index}>
-                        <p>{`(${index} - ${activity.athlete.firstname} ${activity.athlete.lastname})`} <strong>{`${activity.name}:`}</strong> {`${activity.distance}m`}</p>
+                        <p>{`(${index} - ${activity.athlete.firstname} ${activity.athlete.lastname})`} <strong>{`${activity.name}:`}</strong> {`${activity.distance}m, ${activity.total_elevation_gain}m gain, Moving: ${activity.moving_time} Elapsed: ${activity.elapsed_time} (-${activity.elapsed_time - activity.moving_time})`}</p>
                     </li>                    
                 ))}
             </ol>
