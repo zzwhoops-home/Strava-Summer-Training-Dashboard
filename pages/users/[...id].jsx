@@ -1,9 +1,12 @@
 import clientPromise from '../../lib/mongodb';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { serverURL } from '../../config';
 import Error from 'next/error';
 import UserNotFound from './user404';
+import { getCookie } from 'cookies-next';
+import LoggedIn from '../../components/loggedIn';
 
 export async function getServerSideProps(req, res) {
     const athleteId = parseInt(req.query.id);
@@ -43,11 +46,6 @@ export async function getServerSideProps(req, res) {
     // get required data
     const clubsURL = `https://www.strava.com/api/v3/athlete/clubs?access_token=${accessToken}`;
     const clubsResponseJSON = await getData(clubsURL);
-    
-    // // get required data
-    // const activitiesURL = `https://www.strava.com/api/v3/clubs/${clubId}/activities?access_token=${accessToken}&page=2`;
-    // const activityResponse = await fetch(activitiesURL);
-    // const activityResponseJSON = await activityResponse.json();
 
     return ({
         props: {
@@ -68,7 +66,7 @@ function ListClubs({ clubs }) {
             <ol style={{listStyleType: "none"}}>
                 {clubs.map((club=value) => (
                     <li key={club.id}>
-                        <Link href={`https://www.strava.com/clubs/${club.id}`}>(Click here)</Link>
+                        <Link href={`${serverURL}/clubs/${club.id}`}>(Click here)</Link>
                         {` ${club.name}: ${club.member_count} members`}
                     </li>
                 ))}
@@ -77,15 +75,21 @@ function ListClubs({ clubs }) {
     )
 }
 
-export default function User(props) {
-    console.log(props);
+export default function Users(props) {
     if (props.errorCode) {
         return (<UserNotFound />);
     }
     const athlete = props.athlete;
 
+    const [id, setId] = useState();
+    
+    useEffect(() => {
+        setId(getCookie('athleteId'))
+    }, []);
+    
     return (
         <>
+            <LoggedIn id={id}/>
             <div className='header'>
                 <h1>User: {`${athlete.first_name} ${athlete.last_name}`}</h1>
             </div>

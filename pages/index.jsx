@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getCookie } from 'cookies-next';
+import LoggedIn from '../components/loggedIn';
 
 function Header({ title, italic }) {
     return <h1><u>{italic ? <em>{title}</em> : title}</u></h1>;
@@ -38,7 +39,28 @@ function Purpose() {
     )
 }
 
-export default function HomePage() {
+function ViewClubs({ id }) {
+    if (id) {
+        return (
+            <>
+                <LoggedIn id={id}/>
+                <Link href={`/users/${id}`} passHref>
+                    <a>
+                        <h2>View your clubs</h2>
+                    </a>
+                </Link>
+            </>
+        )
+    }
+}
+
+export default function HomePage(props) {
+    const [id, setId] = useState();
+
+    useEffect(() => {
+        setId(getCookie('athleteId'));
+    }, []);
+
     return (
         <div>
             <Header title="Strava Summer Dashboard" italic={true} />
@@ -57,12 +79,7 @@ export default function HomePage() {
                     />
                 </a>
             </Link>
-            <Link href={"/"} passHref>
-                <a>
-                    <h2>View your clubs</h2>
-                </a>
-            </Link>
-
+            <ViewClubs id={id}/>
         </div>
     )
 }

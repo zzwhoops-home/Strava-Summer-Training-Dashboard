@@ -66,7 +66,7 @@ export default function LoginPage(props) {
                 const responseJSON = await response.json()
                 const id = await responseJSON.id;
 
-                await router.push(`/user/${id}`);
+                await router.push(`/users/${id}`);
             }
             authorize();
         }, []);
