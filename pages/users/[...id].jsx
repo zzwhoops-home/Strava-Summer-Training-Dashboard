@@ -13,6 +13,7 @@ export async function getServerSideProps(req, res) {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const athleteInfo = db.collection("athlete_info");
+    const athleteClubs = db.collection("athlete_clubs");
 
     // get valid access token from API endpoint
     const headers = {
@@ -43,22 +44,45 @@ export async function getServerSideProps(req, res) {
     const athlete = await athleteInfo.findOne({ id: athleteId });
     const athleteJSON = await JSON.parse(JSON.stringify(athlete));
 
-    // get required data
-    const clubsURL = `https://www.strava.com/api/v3/athlete/clubs?access_token=${accessToken}`;
-    const clubsResponseJSON = await getData(clubsURL);
+    // see if club exists
+    const updateClubs = async () => {
+        const existing = await athleteClubs.findOne({ id: athleteId });
+        const curTime = Math.floor(Date.now() / 1000);
+
+        if (!existing || ((existing.lastUpdated + 86400) < curTime)) {
+            // get required data from Strava
+            const clubsURL = `https://www.strava.com/api/v3/athlete/clubs?access_token=${accessToken}`;
+            const clubsResponseJSON = await getData(clubsURL);
+            
+            // update DB with new clubs, if user doesn't exist create a new entry.
+            const clubsDBFilter = {
+                id: athleteId
+            }
+            const clubsDBData = {
+                $set: {
+                    id: athleteId,
+                    lastUpdated: curTime,
+                    clubs: clubsResponseJSON
+                }
+            }
+            await athleteClubs.findOneAndUpdate(clubsDBFilter, clubsDBData, { upsert: true });
+
+            // return to populate page with data
+            return clubsResponseJSON;
+        } else {
+            return existing.clubs;
+        }
+    }
+
+    const clubs = await updateClubs();
 
     return ({
         props: {
             athlete: athleteJSON,
-            clubs: clubsResponseJSON
+            clubs: clubs
         }
     });
 }
-
-    /*
-    const data = await access_tokens.find({}).toArray();
-    console.log(data);
-    */
 
 function ListClubs({ clubs }) {
     return (

@@ -16,6 +16,7 @@ export default async function RefreshTokens(req, res) {
     const db = client.db(process.env.DB);
     const accessTokens = db.collection("access_tokens");
     const refreshTokens = db.collection("refresh_tokens");
+    
     // convert query string into number
     const id = await parseInt(req.query.id);
     var queryDB = {

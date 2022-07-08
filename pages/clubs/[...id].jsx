@@ -1,3 +1,4 @@
+import clientPromise from '../../lib/mongodb';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { serverURL } from '../../config';
@@ -7,9 +8,8 @@ import { getCookie } from 'cookies-next';
 export async function getServerSideProps(req, res) {
     const clubId = parseInt(req.query.id);
     const athleteId = req.req.cookies.athleteId;
-    console.log(athleteId);
-    // const client = await clientPromise;
-    // const db = client.db(process.env.DB);
+    const client = await clientPromise;
+    const db = client.db(process.env.DB);
 
     // get valid access token from API endpoint
     const headers = {
@@ -41,7 +41,7 @@ export async function getServerSideProps(req, res) {
     const clubResponse = await getData(clubURL);
 
     // get required data
-    const activitiesURL = `https://www.strava.com/api/v3/clubs/${clubId}/activities?page=1&per_page=100&access_token=${accessToken}`;
+    const activitiesURL = `https://www.strava.com/api/v3/clubs/${clubId}/activities?page=2&per_page=200&access_token=${accessToken}`;
     const activitiesResponseJSON = await getData(activitiesURL);
 
     return ({
