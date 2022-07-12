@@ -9,7 +9,7 @@ import { getCookie } from 'cookies-next';
 import LoggedIn from '../../components/loggedIn';
 
 export async function getServerSideProps(req, res) {
-    const athleteId = parseInt(req.query.id);
+    const athleteId = await parseInt(req.req.cookies.athleteId);
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const athleteInfo = db.collection("athlete_info");

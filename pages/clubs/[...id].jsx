@@ -6,10 +6,11 @@ import ClubNotFound from './club404';
 import { getCookie } from 'cookies-next';
 
 export async function getServerSideProps(req, res) {
-    const clubId = parseInt(req.query.id);
+    const clubId = await parseInt(req.query.id);
     const athleteId = req.req.cookies.athleteId;
     const client = await clientPromise;
     const db = client.db(process.env.DB);
+    const clubActivities = db.collection("club_activities")
 
     // get valid access token from API endpoint
     const headers = {
@@ -40,14 +41,49 @@ export async function getServerSideProps(req, res) {
     const clubURL = `https://www.strava.com/api/v3/clubs/${clubId}?access_token=${accessToken}`;
     const clubResponse = await getData(clubURL);
 
-    // get required data
-    const activitiesURL = `https://www.strava.com/api/v3/clubs/${clubId}/activities?page=2&per_page=200&access_token=${accessToken}`;
-    const activitiesResponseJSON = await getData(activitiesURL);
+    // see if club exists
+    const updateActivities = async () => {
+        const existing = await clubActivities.findOne({ id: clubId });
+        const curTime = Math.floor(Date.now() / 1000);
+
+        if (!existing || ((existing.lastUpdated + 86400) < curTime)) {
+            // get required data from Strava
+            const activitiesURL = `https://www.strava.com/api/v3/clubs/${clubId}/activities?page=1&per_page=200&access_token=${accessToken}`;
+            const activitiesResponseJSON = await getData(activitiesURL);
+            const reversedActivities = await activitiesResponseJSON.reverse();
+            
+            // update DB with new activities, if club doesn't exist create a new entry
+            const activitiesDBFilter = {
+                id: clubId
+            }
+            const activitiesDBData = {
+                $set: {
+                    id: clubId,
+                    lastUpdated: curTime
+                },
+                $addToSet: {
+                    activities: {
+                        $each: reversedActivities
+                    }
+                }
+            }
+            const updatedDB = await clubActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, { upsert: true, returnDocument: "after" });
+            const updatedActivities = await updatedDB.value.activities;
+
+            // return to populate page with data
+            return updatedActivities;
+        } else {
+            return existing.activities;
+        }
+    }
+
+    // reversing to ensure that the newest activities are first
+    const activities = await updateActivities().reverse();
 
     return ({
         props: {
             clubName: clubResponse.name,
-            activities: activitiesResponseJSON
+            activities: activities
         }
     });
 }
