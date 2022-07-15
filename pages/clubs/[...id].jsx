@@ -37,15 +37,22 @@ export async function getServerSideProps(req, res) {
         const response = await fetch(url);
         return await response.json();
     }
-    // get club name again - create api endpoint to add to db so we don't have to waste requests
-    const clubURL = `https://www.strava.com/api/v3/clubs/${clubId}?access_token=${accessToken}`;
-    const clubResponse = await getData(clubURL);
 
     // see if club exists
+    var clubName;
+
     const updateActivities = async () => {
         const existing = await clubActivities.findOne({ id: clubId });
         const curTime = Math.floor(Date.now() / 1000);
 
+        if (!existing) {
+            // get club name again - create api endpoint to add to db so we don't have to waste requests
+            const clubURL = `https://www.strava.com/api/v3/clubs/${clubId}?access_token=${accessToken}`;
+            const clubResponse = await getData(clubURL);
+            clubName = clubResponse.name;
+        } else {
+            clubName = existing.name;
+        }
         if (!existing || ((existing.lastUpdated + 86400) < curTime)) {
             // get required data from Strava
             const activitiesURL = `https://www.strava.com/api/v3/clubs/${clubId}/activities?page=1&per_page=200&access_token=${accessToken}`;
@@ -59,6 +66,7 @@ export async function getServerSideProps(req, res) {
             const activitiesDBData = {
                 $set: {
                     id: clubId,
+                    name: clubName,
                     lastUpdated: curTime
                 },
                 $addToSet: {
@@ -78,11 +86,11 @@ export async function getServerSideProps(req, res) {
     }
 
     // reversing to ensure that the newest activities are first
-    const activities = await updateActivities().reverse();
+    const activities = (await updateActivities()).reverse();
 
     return ({
         props: {
-            clubName: clubResponse.name,
+            clubName: clubName,
             activities: activities
         }
     });
@@ -118,14 +126,14 @@ export default function Clubs(props) {
             <div className='header'>
                 <h1>Club: {`${props.clubName}`}</h1>
             </div>
+            <Link href="/">
+                <a>Back to home</a>
+            </Link>
             <h1>Total Distance: {`${dist.toLocaleString()}m`}</h1>
             <div className='activities'>
                 <ListActivities activities={activities}/>
             </div>
 
-            <Link href="/">
-                <a>Back to home</a>
-            </Link>
         </>
     );
 }

@@ -34,7 +34,7 @@ export default async function Authorization(req, res) {
         });
     }
 
-    const bodyDB = JSON.stringify({
+    const bodyAccessDB = JSON.stringify({
         athlete: authResponseJSON.athlete,
         expires_at: authResponseJSON.expires_at,
         access_token: authResponseJSON.access_token,
@@ -42,17 +42,31 @@ export default async function Authorization(req, res) {
         scope: (requiredScopes == scope) ? true : false
     });
 
-    // POST to api endpoint to update database
+    // POST to api endpoint to add user access tokens to database
     await fetch(`${serverURL}/api/accessTokens`, {
         method: 'POST',
         headers: headers,
-        body: bodyDB
+        body: bodyAccessDB
     });
 
-    setCookie('athleteId', authResponseJSON.athlete.id, { req, res });
+    const athleteId = authResponseJSON.athlete.id;
+
+    // set cookie on webpage
+    setCookie('athleteId', athleteId, { req, res });
+
+    const bodyActivityDB = {
+        athleteId: athleteId
+    }
+    
+    // POST to api endpoint to add athlete activities to database
+    await fetch(`${serverURL}/api/userActivities`, {
+        method: 'POST',
+        headers: headers,
+        body: bodyActivityDB
+    })
 
     return res.status(200).json({
-        message: `${authResponseJSON.athlete.id}'s data has been updated.`,
-        id: authResponseJSON.athlete.id
+        message: `${athleteId}'s data has been updated.`,
+        id: athleteId
     });
 }

@@ -39,6 +39,16 @@ function Purpose() {
     )
 }
 
+function Disclaimer() {
+    return (
+        <>
+            <Header title="Disclaimer:"/>
+            <p>Note that logging in will grant this application access to all of your activities and athlete data. This is to ensure that your information displays correctly. I will most likely not sell your data.</p>
+            <p><i>Unfortunately, because of limitations with the Strava API, only the information of users who have logged into this application will be displayed.</i></p>
+        </>
+    );
+}
+
 function ViewClubs({ id }) {
     if (id) {
         return (
@@ -68,6 +78,7 @@ export default function HomePage(props) {
             <Steps toDisplay={4} />
             <Header title="So why sign up?" />
             <Purpose />
+            <Disclaimer />
             <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=http://localhost:3000/login/&scope=activity:read_all`} passHref>
                 <a>
                     <Image

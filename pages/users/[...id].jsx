@@ -117,13 +117,13 @@ export default function Users(props) {
             <div className='header'>
                 <h1>User: {`${athlete.first_name} ${athlete.last_name}`}</h1>
             </div>
+            <Link href="/">
+                <a>Back to home</a>
+            </Link>
             <div className='clubs'>
                 <ListClubs clubs={props.clubs}/>
             </div>
 
-            <Link href="/">
-                <a>Back to home</a>
-            </Link>
         </>
     );
 }
