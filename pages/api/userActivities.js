@@ -46,19 +46,21 @@ export default async function UserActivities(req, res) {
         if (!existing || (existing.lastUpdated + 14400) < curTime) {
             // get required data from Strava
             const activitiesURL = `https://www.strava.com/api/v3/athlete/clubs?access_token=${accessToken}`;
-            const activitiesResponseJSON = await getData(clubsURL);
+            const activitiesResponseJSON = await getData(activitiesURL);
             
             // update DB with new clubs, if user doesn't exist create a new entry.
-            const clubsDBFilter = {
+            const activitiesDBFilter = {
                 id: athleteId
             }
-            const clubsDBData = {
+            const activitiesDBData = {
                 $set: {
                     id: athleteId,
                     lastUpdated: curTime,
-                    clubs: clubsResponseJSON
+                    activities: activitiesResponseJSON
                 }
             }
+
+            await userActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, { upsert: true });
         } else {
 
         }
