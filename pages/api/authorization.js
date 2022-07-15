@@ -66,7 +66,6 @@ export default async function Authorization(req, res) {
     })
 
     return res.status(200).json({
-        message: `${athleteId}'s data has been updated.`,
-        id: athleteId
+        message: `${athleteId}'s data has been updated.`
     });
 }

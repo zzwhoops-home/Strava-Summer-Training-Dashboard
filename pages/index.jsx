@@ -17,32 +17,47 @@ function Steps({ toDisplay }) {
     steps = steps.slice(0, toDisplay);
     
     return (
-        <ul style={{listStyleType: "none"}}>
-            {steps.map((step=value, index=index) => (
-                <>
-                    <ListItem key={index} value={`(${index + 1}). ${step}`} />
-                    {/*<li key={index * 2}>{`${index + 1 * 2} Hi lol`}</li>*/}
-                </>
-            ))}
-        </ul>
+        <>
+            <Header title="Welcome!" />
+            <ul style={{listStyleType: "none"}}>
+                {steps.map((step=value, index=index) => (
+                    <>
+                        <ListItem key={index} value={`(${index + 1}). ${step}`} />
+                        {/*<li key={index * 2}>{`${index + 1 * 2} Hi lol`}</li>*/}
+                    </>
+                ))}
+            </ul>
+        </>
     )
 }
 function Purpose() {
     const reasons = ["Motivate each other through friendly competition", `Have fun beating up mascots from other schools`, "This was a lot of work"]
 
     return (
-        <ul style={{listStyleType: "none"}}>
-            {reasons.map((reason=value, index=index) => (
-                <ListItem key={index} value={`(${index + 1}). ${reason}`} />
-            ))}
-        </ul>
+        <>
+            <Header title="So why sign up?" />
+            <ul style={{listStyleType: "none"}}>
+                {reasons.map((reason=value, index=index) => (
+                    <ListItem key={index} value={`(${index + 1}). ${reason}`} />
+                    ))}
+            </ul>
+        </>
+    )
+}
+
+function Information() {
+    return(
+        <>
+            <Header title="General Information:" />
+            <p>"Summer training" began on the Summer Solstice, 6/21/2022, and ends on 9/08/2022, Milesplit's official XC opening day!</p>
+        </>
     )
 }
 
 function Disclaimer() {
     return (
         <>
-            <Header title="Disclaimer:"/>
+            <Header title="Disclaimer:" />
             <p>Note that logging in will grant this application access to all of your activities and athlete data. This is to ensure that your information displays correctly. I will most likely not sell your data.</p>
             <p><i>Unfortunately, because of limitations with the Strava API, only the information of users who have logged into this application will be displayed.</i></p>
         </>
@@ -74,9 +89,8 @@ export default function HomePage(props) {
     return (
         <div>
             <Header title="Strava Summer Dashboard" italic={true} />
-            <Header title="Welcome!" />
+            <Information />
             <Steps toDisplay={4} />
-            <Header title="So why sign up?" />
             <Purpose />
             <Disclaimer />
             <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=http://localhost:3000/login/&scope=activity:read_all`} passHref>

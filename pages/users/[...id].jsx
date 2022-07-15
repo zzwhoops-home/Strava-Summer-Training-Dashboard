@@ -15,7 +15,7 @@ export async function getServerSideProps(req, res) {
     const athleteInfo = db.collection("athlete_info");
     const athleteClubs = db.collection("athlete_clubs");
 
-    // get valid access token from API endpoint
+    // GET valid access token from API endpoint
     const headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

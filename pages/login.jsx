@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { requiredScopes } from "../config";
 import { useEffect } from "react";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(ctx) {
     // get url params
