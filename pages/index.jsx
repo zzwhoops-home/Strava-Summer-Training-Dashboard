@@ -1,8 +1,16 @@
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { getCookie } from 'cookies-next';
-import LoggedIn from '../components/loggedIn';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { getCookie } from "cookies-next";
+import LoggedIn from "../components/loggedIn";
+
+export async function getServerSideProps({ req, res }) {
+    return ({
+        props: {
+            pathname: req.headers.host
+        }
+    })
+}
 
 function Header({ title, italic }) {
     return <h1><u>{italic ? <em>{title}</em> : title}</u></h1>;
@@ -86,6 +94,8 @@ export default function HomePage(props) {
         setId(getCookie('athleteId'));
     }, []);
 
+    const redirectURL = props.pathname;
+
     return (
         <div>
             <Header title="Strava Summer Dashboard" italic={true} />
@@ -93,7 +103,7 @@ export default function HomePage(props) {
             <Steps toDisplay={4} />
             <Purpose />
             <Disclaimer />
-            <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=http://localhost:3000/login/&scope=activity:read_all`} passHref>
+            <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=http://${redirectURL}/login/&scope=activity:read_all`} passHref>
                 <a>
                     <Image
                         src="/strava_button_orange.png"

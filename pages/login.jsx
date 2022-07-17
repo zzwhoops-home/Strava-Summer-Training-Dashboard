@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { requiredScopes } from "../config";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { getCookie } from 'cookies-next';
 
 export async function getServerSideProps(ctx) {
     // get url params
@@ -59,14 +60,13 @@ export default function LoginPage(props) {
     
         useEffect(() => {
             const authorize = async () => { 
-                const response = await fetch(`api/authorization?code=${props.data.code}&scope=${props.data.scope}`, {
+                await fetch(`api/authorization?code=${props.data.code}&scope=${props.data.scope}`, {
                     method: 'GET',
                     "headers": headers
                 });
-                const responseJSON = await response.json()
-                const id = await responseJSON.id;
+                const athleteId = await getCookie('athleteId');
 
-                await router.push(`/users/${id}`);
+                await router.push(`/users/${athleteId}`);
             }
             authorize();
         }, []);

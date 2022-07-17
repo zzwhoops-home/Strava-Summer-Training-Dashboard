@@ -5,3 +5,4 @@ package.json
 .env
 /old_pages/
 /pages/api/example_athlete.json
+.vercel

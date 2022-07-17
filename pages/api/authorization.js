@@ -52,7 +52,7 @@ export default async function Authorization(req, res) {
     const athleteId = authResponseJSON.athlete.id;
 
     // set cookie on webpage
-    setCookie('athleteId', athleteId, { req, res });
+    await setCookie('athleteId', athleteId, { req, res });
 
     const bodyActivityDB = {
         athleteId: athleteId
