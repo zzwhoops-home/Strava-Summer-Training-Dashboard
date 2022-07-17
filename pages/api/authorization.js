@@ -54,10 +54,10 @@ export default async function Authorization(req, res) {
     // set cookie on webpage
     await setCookie('athleteId', athleteId, { req, res });
 
-    const bodyActivityDB = {
+    const bodyActivityDB = JSON.stringify({
         athleteId: athleteId
-    }
-    
+    });
+
     // POST to api endpoint to add athlete activities to database
     await fetch(`${serverURL}/api/userActivities`, {
         method: 'POST',

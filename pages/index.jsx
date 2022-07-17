@@ -68,6 +68,7 @@ function Disclaimer() {
             <Header title="Disclaimer:" />
             <p>Note that logging in will grant this application access to all of your activities and athlete data. This is to ensure that your information displays correctly. I will most likely not sell your data.</p>
             <p><i>Unfortunately, because of limitations with the Strava API, only the information of users who have logged into this application will be displayed.</i></p>
+            <p><i>On your first login, only up to your most recent 1000 activities will be counted.</i></p>
         </>
     );
 }
