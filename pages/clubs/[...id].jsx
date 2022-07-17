@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { serverURL } from '../../config';
 import ClubNotFound from './club404';
 import { getCookie } from 'cookies-next';
+import { GetAccessToken } from '../api/refreshTokens';
 
 export async function getServerSideProps(req, res) {
     const clubId = await parseInt(req.query.id);
@@ -12,26 +13,16 @@ export async function getServerSideProps(req, res) {
     const db = client.db(process.env.DB);
     const clubActivities = db.collection("club_activities")
 
-    // get valid access token from API endpoint
-    const headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-
-    const accessResponse = await fetch(`${serverURL}/api/refreshTokens?id=${athleteId}`, {
-        method: 'GET',
-        headers: headers
-    });
-    const errorCode = accessResponse.ok ? false : accessResponse.status;
-    if (errorCode) {
+    // GET valid access token from API endpoint
+    const accessRes = await GetAccessToken(athleteId);
+    if (accessRes.errorCode) {
         return ({
             props: {
-                errorCode: errorCode
+                errorCode: accessRes.errorCode
             }
-        });
+        })
     }
-    const accessResponseJSON = await accessResponse.json();
-    const accessToken = accessResponseJSON.valid_access_token;
+    const accessToken = accessRes.valid_access_token;
 
     const getData = async (url) => {
         const response = await fetch(url);

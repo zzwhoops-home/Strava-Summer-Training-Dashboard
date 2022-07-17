@@ -7,6 +7,7 @@ import Error from 'next/error';
 import UserNotFound from './user404';
 import { getCookie } from 'cookies-next';
 import LoggedIn from '../../components/loggedIn';
+import { GetAccessToken } from '../api/refreshTokens';
 
 export async function getServerSideProps(req, res) {
     const athleteId = await parseInt(req.req.cookies.athleteId);
@@ -16,30 +17,16 @@ export async function getServerSideProps(req, res) {
     const athleteClubs = db.collection("athlete_clubs");
 
     // GET valid access token from API endpoint
-    const headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-
-    const accessResponse = await fetch(`${serverURL}/api/refreshTokens?id=${athleteId}`, {
-        method: 'GET',
-        headers: headers
-    });
-    const errorCode = accessResponse.ok ? false : accessResponse.status;
-    if (errorCode) {
+    const accessRes = await GetAccessToken(athleteId);
+    if (accessRes.errorCode) {
         return ({
             props: {
-                errorCode: errorCode
+                errorCode: accessRes.errorCode
             }
-        });
+        })
     }
-    const accessResponseJSON = await accessResponse.json();
-    const accessToken = accessResponseJSON.valid_access_token;
-
-    const getData = async (url) => {
-        const response = await fetch(url);
-        return await response.json();
-    }
+    const accessToken = accessRes.valid_access_token;
+    
     // get athlete information
     const athlete = await athleteInfo.findOne({ id: athleteId });
     const athleteJSON = await JSON.parse(JSON.stringify(athlete));
@@ -52,7 +39,8 @@ export async function getServerSideProps(req, res) {
         if (!existing || ((existing.lastUpdated + 86400) < curTime)) {
             // get required data from Strava
             const clubsURL = `https://www.strava.com/api/v3/athlete/clubs?access_token=${accessToken}`;
-            const clubsResponseJSON = await getData(clubsURL);
+            const clubsResponse = await fetch(clubsURL);
+            const clubsResponseJSON = await clubsResponse.json();
             
             // update DB with new clubs, if user doesn't exist create a new entry.
             const clubsDBFilter = {

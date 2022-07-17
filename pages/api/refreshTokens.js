@@ -1,4 +1,26 @@
 import clientPromise from "../../lib/mongodb";
+import { serverURL } from "../../config";
+
+export async function GetAccessToken(athleteId) {
+    // GET valid access token from API endpoint
+    const headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+
+    const accessResponse = await fetch(`${serverURL}/api/refreshTokens?id=${athleteId}`, {
+        method: 'GET',
+        headers: headers
+    });
+    const errorCode = accessResponse.ok ? false : accessResponse.status;
+    if (errorCode) {
+        return ({
+            errorCode: errorCode
+        })
+    }
+    const accessResponseJSON = await accessResponse.json();
+    return accessResponseJSON;
+}
 
 export default async function RefreshTokens(req, res) {
     // GET requests should send a query in this format:
@@ -16,7 +38,7 @@ export default async function RefreshTokens(req, res) {
     const db = client.db(process.env.DB);
     const accessTokens = db.collection("access_tokens");
     const refreshTokens = db.collection("refresh_tokens");
-    
+
     // convert query string into number
     const id = await parseInt(req.query.id);
     var queryDB = {

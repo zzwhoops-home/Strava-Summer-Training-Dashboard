@@ -1,5 +1,6 @@
 import { update } from "mongodb-core/lib/wireprotocol";
 import clientPromise from "../../lib/mongodb";
+import { GetAccessToken } from "./refreshTokens";
 
 export default async function UserActivities(req, res) {
     if (req.method != 'POST') {
@@ -15,23 +16,11 @@ export default async function UserActivities(req, res) {
     const athleteId = body.athleteId;
     
     // GET valid access token from API endpoint
-    const headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-
-    const accessResponse = await fetch(`${serverURL}/api/refreshTokens?id=${athleteId}`, {
-        method: 'GET',
-        headers: headers
-    });
-
-    // check for errors
-    const errorCode = accessResponse.ok ? false : accessResponse.status;
-    if (errorCode) {
+    const accessRes = GetAccessToken(athleteId);
+    if (accessRes.errorCode) {
         return res.status(errorCode).send({ message: `Failed to get access token with error ${errorCode}` });
     }
-    const accessResponseJSON = await accessResponse.json();
-    const accessToken = accessResponseJSON.valid_access_token;
+    const accessToken = accessRes.valid_access_token;
 
     const getData = async (url) => {
         const response = await fetch(url);
