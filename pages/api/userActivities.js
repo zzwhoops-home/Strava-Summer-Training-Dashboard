@@ -36,8 +36,6 @@ async function UpdateActivities(athleteId, accessToken) {
     const curTime = Math.floor(Date.now() / 1000);
 
     // create activities entry if it doesn't exist, or replace completely if the data is more than four hours old
-    let activities = [];
-
     // return given page of activities (since limit is 200/page)
     const returnActivities = async (page, startTime) => {
         const activitiesURL = `https://www.strava.com/api/v3/athlete/activities?before=${curTime}&after=${startTime}&page=${page}&per_page=200&access_token=${accessToken}`;
@@ -46,17 +44,21 @@ async function UpdateActivities(athleteId, accessToken) {
         return activitiesResponseJSON;
     }
     // only try first 5 pages - 1000 activities
-    const getActivities = async (startTime) => { 
-        for (let i = 1; i <= 5; i++) {
+    const getActivities = async (startTime) => {
+        let responses = [];
+        
+        for (let i = 1; i <= 10; i++) {
             const promise = await returnActivities(i, startTime);
-            // break if the array returned is empty to save requests
-            if (!(Array.isArray(promise) && promise.length)) {
+            await responses.push(promise);
+            // break if the array returned is empty, or under 200 entries to save requests
+            console.log(promise.length);
+            if (!(Array.isArray(promise) && promise.length) || promise.length < 200) {
                 break;
             }
-            await activities.push(promise);
         }
-        activities = await(activities.flat());
-        const formattedActivities = activities.map((activity=value) => (
+        responses = await responses.flat();
+
+        let formattedActivities = await responses.map((activity=value) => (
             {
                 activityId: activity.id,
                 name: activity.name,
@@ -79,18 +81,16 @@ async function UpdateActivities(athleteId, accessToken) {
                 prs: activity.pr_count
             }
         ));
+        formattedActivities = await formattedActivities.reverse();
         return formattedActivities;
     }
 
+    let activities = [];
     // logic if data is old or just doesn't exist
-    if (!existing) {
+    if (!existing || ((existing.lastUpdated + 14400) < curTime)) {
         // 12AM EST 6/21/2022 (1655784000)
         const startTime = 1655784000
-        await getActivities(startTime);
-    } else if ((existing.lastUpdated + 86400) < curTime) {
-        // get activities from last updated timestamp
-        const startTime = existing.lastUpdated;
-        await getActivities(startTime);
+        activities = await getActivities(startTime);
     } else {
         // return database activities, don't query db or strava API
         return existing.activities;
@@ -98,7 +98,7 @@ async function UpdateActivities(athleteId, accessToken) {
 
     // update DB with new clubs, if user doesn't exist create a new entry.
     const activitiesDBFilter = {
-        id: athleteId
+        id: athleteId,
     }
     const activitiesDBData = {
         $set: {
@@ -107,17 +107,16 @@ async function UpdateActivities(athleteId, accessToken) {
             activities: activities
         }
     }
-    await userActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, { upsert: true });
+    const activitiesDBArrayFilter = {
+        upsert: true
+    }
+    await userActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, activitiesDBArrayFilter);
 }
 
 export default async function UserActivities(req, res) {
     if (req.method != 'POST') {
         return res.status(405).send({ message: "You may only send POST requests to this endpoint. "});
     }
-    // query DB
-    const client = await clientPromise;
-    const db = client.db(process.env.DB);
-    const userActivities = db.collection("user_activities");
 
     // body parameters
     const body = req.body;
@@ -131,7 +130,7 @@ export default async function UserActivities(req, res) {
     }
     const accessToken = accessRes.valid_access_token;
 
-    console.log(await UpdateActivities(athleteId, accessToken));
+    await UpdateActivities(athleteId, accessToken);
 
     return res.status(200).send({ message: "User activities sphog" });
 }

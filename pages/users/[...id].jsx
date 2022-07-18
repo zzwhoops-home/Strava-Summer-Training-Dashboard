@@ -7,62 +7,28 @@ import Error from 'next/error';
 import UserNotFound from './user404';
 import { getCookie } from 'cookies-next';
 import LoggedIn from '../../components/loggedIn';
-import { GetAccessToken } from '../api/refreshTokens';
+import { GetClubs } from '../api/userClubs';
 
 export async function getServerSideProps(req, res) {
-    const athleteId = await parseInt(req.req.cookies.athleteId);
+    const loggedInAthleteId = await parseInt(req.req.cookies.athleteId);
+    const athleteId = await parseInt(req.query.id)
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const athleteInfo = db.collection("athlete_info");
-    const athleteClubs = db.collection("athlete_clubs");
+    
+    const clubs = await GetClubs(athleteId);
 
-    // GET valid access token from API endpoint
-    const accessRes = await GetAccessToken(athleteId);
-    if (accessRes.errorCode) {
+    if (clubs.errorCode) {
         return ({
             props: {
-                errorCode: accessRes.errorCode
+                errorCode: clubs.errorCode
             }
         })
     }
-    const accessToken = accessRes.valid_access_token;
     
     // get athlete information
     const athlete = await athleteInfo.findOne({ id: athleteId });
     const athleteJSON = await JSON.parse(JSON.stringify(athlete));
-
-    // see if club exists
-    const updateClubs = async () => {
-        const existing = await athleteClubs.findOne({ id: athleteId });
-        const curTime = Math.floor(Date.now() / 1000);
-
-        if (!existing || ((existing.lastUpdated + 86400) < curTime)) {
-            // get required data from Strava
-            const clubsURL = `https://www.strava.com/api/v3/athlete/clubs?access_token=${accessToken}`;
-            const clubsResponse = await fetch(clubsURL);
-            const clubsResponseJSON = await clubsResponse.json();
-            
-            // update DB with new clubs, if user doesn't exist create a new entry.
-            const clubsDBFilter = {
-                id: athleteId
-            }
-            const clubsDBData = {
-                $set: {
-                    id: athleteId,
-                    lastUpdated: curTime,
-                    clubs: clubsResponseJSON
-                }
-            }
-            await athleteClubs.findOneAndUpdate(clubsDBFilter, clubsDBData, { upsert: true });
-
-            // return to populate page with data
-            return clubsResponseJSON;
-        } else {
-            return existing.clubs;
-        }
-    }
-
-    const clubs = await updateClubs();
 
     return ({
         props: {
