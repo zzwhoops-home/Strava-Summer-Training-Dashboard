@@ -114,23 +114,27 @@ async function UpdateActivities(athleteId, accessToken) {
 }
 
 export default async function UserActivities(req, res) {
-    if (req.method != 'POST') {
-        return res.status(405).send({ message: "You may only send POST requests to this endpoint. "});
-    }
-
-    // body parameters
-    const body = req.body;
-    const athleteId = body.athleteId;
+    if (req.method == 'POST') {
+        // body parameters
+        const body = req.body;
+        const athleteId = body.athleteId;
+        
+        // GET valid access token from API endpoint
+        const accessRes = await GetAccessToken(athleteId);
     
-    // GET valid access token from API endpoint
-    const accessRes = await GetAccessToken(athleteId);
+        if (accessRes.errorCode) {
+            return res.status(errorCode).send({ message: `Failed to get access token with error ${errorCode}` });
+        }
+        const accessToken = accessRes.valid_access_token;
+    
+        await UpdateActivities(athleteId, accessToken);
 
-    if (accessRes.errorCode) {
-        return res.status(errorCode).send({ message: `Failed to get access token with error ${errorCode}` });
+        return res.status(200);
+        // return res.status(200).send({ message: "User activities sphog" });
+    } else if (req.method != 'GET') {
+        
+    } else {
+        return res.status(405).send({ message: "You may only send GET and POST requests to this endpoint. "});
     }
-    const accessToken = accessRes.valid_access_token;
 
-    await UpdateActivities(athleteId, accessToken);
-
-    return res.status(200).send({ message: "User activities sphog" });
 }
