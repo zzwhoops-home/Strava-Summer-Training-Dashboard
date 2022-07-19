@@ -7,7 +7,7 @@ import Error from 'next/error';
 import UserNotFound from './user404';
 import { getCookie } from 'cookies-next';
 import LoggedIn from '../../components/loggedIn';
-import { GetClubs } from '../api/userClubs';
+import { GetClubs } from '../api/athleteClubs';
 
 export async function getServerSideProps(req, res) {
     const loggedInAthleteId = await parseInt(req.req.cookies.athleteId);

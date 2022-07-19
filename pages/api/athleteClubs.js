@@ -3,6 +3,7 @@ import clientPromise from "../../lib/mongodb";
 import { GetAccessToken } from "./refreshTokens";
 
 export async function GetClubs(athleteId) {
+    // query DB, get athlete clubs collection reference
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const athleteClubs = db.collection("athlete_clubs");
@@ -47,6 +48,28 @@ export async function GetClubs(athleteId) {
     } else {
         return existing.clubs;
     }
+
+}
+export async function GetClubActivities(clubId) {    
+    // query DB, get athlete clubs collection reference
+    const client = await clientPromise;
+    const db = client.db(process.env.DB);
+    const athleteActivities = db.collection("athlete_activities");
+    const clubData = db.collection("club_data");
+
+    // get current list of registered users for our club
+    const currentClub = await clubData.findOne({ id: clubId });
+    const registeredUsers = currentClub.registeredUsers;
+    
+    // return massive array of user data
+    let userData = [];
+    const activityArrayQuery = {
+        id: {
+            $in: registeredUsers
+        }
+    }
+    const activityArray = await athleteActivities.find(activityArrayQuery);
+    console.log(activityArray);
 }
 export default async function UserClubs(req, res) {
 

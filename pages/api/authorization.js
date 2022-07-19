@@ -59,7 +59,7 @@ export default async function Authorization(req, res) {
     });
 
     // POST to api endpoint to add athlete activities to database
-    await fetch(`${serverURL}/api/userActivities`, {
+    await fetch(`${serverURL}/api/athleteActivities`, {
         method: 'POST',
         headers: headers,
         body: bodyActivityDB

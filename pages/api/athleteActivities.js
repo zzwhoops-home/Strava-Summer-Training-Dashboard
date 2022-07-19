@@ -28,10 +28,10 @@ async function UpdateActivities(athleteId, accessToken) {
     // query DB
     const client = await clientPromise;
     const db = client.db(process.env.DB);
-    const userActivities = db.collection("user_activities");
+    const athleteActivities = db.collection("athlete_activities");
 
     // find existing entry
-    const existing = await userActivities.findOne({ id: athleteId });
+    const existing = await athleteActivities.findOne({ id: athleteId });
     // get current epoch timestamp
     const curTime = Math.floor(Date.now() / 1000);
 
@@ -110,10 +110,10 @@ async function UpdateActivities(athleteId, accessToken) {
     const activitiesDBArrayFilter = {
         upsert: true
     }
-    await userActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, activitiesDBArrayFilter);
+    await athleteActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, activitiesDBArrayFilter);
 }
 
-export default async function UserActivities(req, res) {
+export default async function AthleteActivities(req, res) {
     if (req.method == 'POST') {
         // body parameters
         const body = req.body;
@@ -129,10 +129,9 @@ export default async function UserActivities(req, res) {
     
         await UpdateActivities(athleteId, accessToken);
 
-        return res.status(200);
-        // return res.status(200).send({ message: "User activities sphog" });
+        return res.status(200).send({ message: "Data successfully updated" });
     } else if (req.method != 'GET') {
-        
+
     } else {
         return res.status(405).send({ message: "You may only send GET and POST requests to this endpoint. "});
     }

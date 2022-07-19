@@ -5,13 +5,13 @@ import { serverURL } from '../../config';
 import ClubNotFound from './club404';
 import { getCookie } from 'cookies-next';
 import { GetAccessToken } from '../api/refreshTokens';
+import { GetClubActivities } from '../api/athleteClubs';
 
 export async function getServerSideProps(req, res) {
     const clubId = await parseInt(req.query.id);
     const athleteId = await parseInt(req.req.cookies.athleteId);
     const client = await clientPromise;
     const db = client.db(process.env.DB);
-    const clubActivities = db.collection("club_activities")
     const clubData = db.collection("club_data");
 
     // const clubDBData = {
@@ -39,12 +39,12 @@ export async function getServerSideProps(req, res) {
     // see if club exists
     var clubName;
 
-    const updateActivities = async () => {
+    const updateClubData = async () => {
         const existing = await clubData.findOne({ id: clubId });
         const curTime = Math.floor(Date.now() / 1000);
 
         if (!existing) {
-            // get club name again - create api endpoint to add to db so we don't have to waste requests
+            // get club name if club data does not exist yet
             const clubURL = `https://www.strava.com/api/v3/clubs/${clubId}?access_token=${accessToken}`;
             const clubResponse = await getData(clubURL);
 
@@ -64,48 +64,30 @@ export async function getServerSideProps(req, res) {
             }
             await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true });
             clubName = clubResponse.name;
-        } else {
-            clubName = existing.name;
-        }
-        if (!existing || ((existing.lastUpdated + 86400) < curTime)) {
-            // get required data from Strava
-            const activitiesURL = `https://www.strava.com/api/v3/clubs/${clubId}/activities?page=1&per_page=200&access_token=${accessToken}`;
-            const activitiesResponseJSON = await getData(activitiesURL);
-            const reversedActivities = await activitiesResponseJSON.reverse();
-            
-            // update DB with new activities, if club doesn't exist create a new entry
-            const activitiesDBFilter = {
+        } else {            
+            // otherwise just add the user to the list of users that have logged into our application
+            const clubDBFilter = {
                 id: clubId
             }
-            const activitiesDBData = {
-                $set: {
-                    id: clubId,
-                    name: clubName,
-                    lastUpdated: curTime
-                },
+            const clubDBData = {
                 $addToSet: {
-                    activities: {
-                        $each: reversedActivities
-                    }
+                    registeredUsers: athleteId
                 }
             }
-            const updatedDB = await clubActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, { upsert: true, returnDocument: "after" });
-            const updatedActivities = await updatedDB.value.activities;
-
-            // return to populate page with data
-            return updatedActivities;
-        } else {
-            return existing.activities;
+            await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true });
+            clubName = existing.name;
         }
     }
 
+
     // reversing to ensure that the newest activities are first
-    const activities = (await updateActivities()).reverse();
+    await updateClubData();
+    const activities = await GetClubActivities(clubId);
 
     return ({
         props: {
             clubName: clubName,
-            activities: activities
+            activities: ""
         }
     });
 }
@@ -128,6 +110,14 @@ export default function Clubs(props) {
     if (props.errorCode) {
         return (<ClubNotFound />);
     }
+    return (
+        <>
+            <div className='header'>
+                <h1>Club: {`${props.clubName}`}</h1>
+            </div>
+            <p>Welcome friends</p>
+        </>
+    )
     const activities = props.activities;
     let dist = 0;
     activities.forEach(distanceSum);
