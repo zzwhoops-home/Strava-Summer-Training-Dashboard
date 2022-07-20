@@ -3,11 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { getCookie } from "cookies-next";
 import LoggedIn from "../components/loggedIn";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps({ req, res }) {
     return ({
         props: {
-            pathname: req.headers.host
+            pathname: req.headers.referer
         }
     })
 }
@@ -89,6 +90,8 @@ function ViewClubs({ id }) {
 }
 
 export default function HomePage(props) {
+    const router = useRouter();
+
     const [id, setId] = useState();
 
     useEffect(() => {
@@ -96,6 +99,7 @@ export default function HomePage(props) {
     }, []);
 
     const redirectURL = props.pathname;
+    console.log(redirectURL);
 
     return (
         <div>
@@ -104,7 +108,7 @@ export default function HomePage(props) {
             <Steps toDisplay={4} />
             <Purpose />
             <Disclaimer />
-            <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=http://${redirectURL}/login/&scope=activity:read_all`} passHref>
+            <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=${redirectURL}/login/&scope=activity:read_all`} passHref>
                 <a>
                     <Image
                         src="/strava_button_orange.png"

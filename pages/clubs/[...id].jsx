@@ -75,7 +75,6 @@ export async function getServerSideProps(req, res) {
         }
     }
 
-
     // reversing to ensure that the newest activities are first
     await updateClubData();
     const activities = await GetClubActivities(clubId);

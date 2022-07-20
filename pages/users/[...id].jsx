@@ -30,27 +30,44 @@ export async function getServerSideProps(req, res) {
     const athlete = await athleteInfo.findOne({ id: athleteId });
     const athleteJSON = await JSON.parse(JSON.stringify(athlete));
 
+    const isUser = loggedInAthleteId == athleteId ? true : false
+
     return ({
         props: {
             athlete: athleteJSON,
-            clubs: clubs
+            clubs: clubs,
+            isUser: isUser
         }
     });
 }
 
-function ListClubs({ clubs }) {
-    return (
-        <>
-            <ol style={{listStyleType: "none"}}>
-                {clubs.map((club=value) => (
-                    <li key={club.id}>
-                        <Link href={`${serverURL}/clubs/${club.id}`}>(Click here)</Link>
-                        {` ${club.name}: ${club.member_count} members`}
-                    </li>
-                ))}
-            </ol>
-        </>
-    )
+function ListClubs({ clubs, isUser }) {
+    if (isUser) {
+        return (
+            <>
+                <ol style={{listStyleType: "none"}}>
+                    {clubs.map((club=value) => (
+                        <li key={club.id}>
+                            <Link href={`${serverURL}/clubs/${club.id}`}>(Click here)</Link>
+                            {` ${club.name}: ${club.member_count} members`}
+                        </li>
+                    ))}
+                </ol>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <ol style={{listStyleType: "none"}}>
+                    {clubs.map((club=value) => (
+                        <li key={club.id}>
+                            {` ${club.name}: ${club.member_count} members`}
+                        </li>
+                    ))}
+                </ol>
+            </>
+        );
+    }
 }
 
 export default function Users(props) {
@@ -64,7 +81,7 @@ export default function Users(props) {
     useEffect(() => {
         setId(getCookie('athleteId'))
     }, []);
-    
+
     return (
         <>
             <LoggedIn id={id}/>
@@ -75,9 +92,10 @@ export default function Users(props) {
                 <a>Back to home</a>
             </Link>
             <div className='clubs'>
-                <ListClubs clubs={props.clubs}/>
+                <ListClubs clubs={props.clubs} isUser={props.isUser} />
             </div>
 
         </>
     );
+
 }

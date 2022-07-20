@@ -82,7 +82,6 @@ export async function GetClubActivities(clubId) {
     const activityArrayCursor = await athleteActivities.find(activityArrayQuery, activityArrayOptions);
     const activityArray = await activityArrayCursor.toArray();
 
-    console.log(activityArray);
     // console.log(await activityArray.map(value => value.id));
     return activityArray;
 }
