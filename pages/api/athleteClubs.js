@@ -68,8 +68,14 @@ export async function GetClubActivities(clubId) {
             $in: registeredUsers
         }
     }
-    const activityArray = await athleteActivities.find(activityArrayQuery);
-    console.log(activityArray);
+    const activityArrayOptions = {
+        projection: {
+            _id: 0
+        }
+    }
+    const activityArrayCursor = await athleteActivities.find(activityArrayQuery, activityArrayOptions);
+    const activityArray = await activityArrayCursor.toArray();
+    return activityArray;
 }
 export default async function UserClubs(req, res) {
 

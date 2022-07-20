@@ -87,7 +87,7 @@ export async function getServerSideProps(req, res) {
     return ({
         props: {
             clubName: clubName,
-            activities: ""
+            activities: activities
         }
     });
 }
@@ -115,29 +115,14 @@ export default function Clubs(props) {
             <div className='header'>
                 <h1>Club: {`${props.clubName}`}</h1>
             </div>
-            <p>Welcome friends</p>
+            <div className='homePageLink'>
+                <Link href="/">
+                    <a>Back to home</a>
+                </Link>
+            </div>
+            <div className='clubStats'>
+                <GetStats />
+            </div>
         </>
     )
-    const activities = props.activities;
-    let dist = 0;
-    activities.forEach(distanceSum);
-    function distanceSum(activity) {
-        dist += activity.distance;
-    }
-
-    return (
-        <>
-            <div className='header'>
-                <h1>Club: {`${props.clubName}`}</h1>
-            </div>
-            <Link href="/">
-                <a>Back to home</a>
-            </Link>
-            <h1>Total Distance: {`${dist.toLocaleString()}m`}</h1>
-            <div className='activities'>
-                <ListActivities activities={activities}/>
-            </div>
-
-        </>
-    );
 }
