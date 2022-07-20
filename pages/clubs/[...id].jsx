@@ -5,7 +5,7 @@ import { serverURL } from '../../config';
 import ClubNotFound from './club404';
 import { getCookie } from 'cookies-next';
 import { GetAccessToken } from '../api/refreshTokens';
-import { GetClubActivities } from '../api/athleteClubs';
+import { GetClubActivities, GetStats } from '../api/clubData';
 
 export async function getServerSideProps(req, res) {
     const clubId = await parseInt(req.query.id);
@@ -31,11 +31,6 @@ export async function getServerSideProps(req, res) {
     }
     const accessToken = accessRes.valid_access_token;
 
-    const getData = async (url) => {
-        const response = await fetch(url);
-        return await response.json();
-    }
-
     // see if club exists
     var clubName;
 
@@ -46,7 +41,8 @@ export async function getServerSideProps(req, res) {
         if (!existing) {
             // get club name if club data does not exist yet
             const clubURL = `https://www.strava.com/api/v3/clubs/${clubId}?access_token=${accessToken}`;
-            const clubResponse = await getData(clubURL);
+            const clubResponse = await fetch(clubURL);
+            const clubResponseJSON = await clubResponse.json();
 
             const clubDBFilter = {
                 id: clubId
@@ -54,8 +50,8 @@ export async function getServerSideProps(req, res) {
             const clubDBData = {
                 $set: {
                     id: clubId,
-                    name: clubResponse.name,
-                    memberCount: clubResponse.member_count,
+                    name: clubResponseJSON.name,
+                    memberCount: clubResponseJSON.member_count,
                     lastUpdated: curTime
                 },
                 $addToSet: {
@@ -63,7 +59,7 @@ export async function getServerSideProps(req, res) {
                 }
             }
             await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true });
-            clubName = clubResponse.name;
+            clubName = clubResponseJSON.name;
         } else {            
             // otherwise just add the user to the list of users that have logged into our application
             const clubDBFilter = {
@@ -83,11 +79,13 @@ export async function getServerSideProps(req, res) {
     // reversing to ensure that the newest activities are first
     await updateClubData();
     const activities = await GetClubActivities(clubId);
+    const stats = await GetStats(activities);
 
     return ({
         props: {
             clubName: clubName,
-            activities: activities
+            activities: activities,
+            stats: stats
         }
     });
 }
@@ -107,6 +105,7 @@ function ListActivities({ activities }) {
 }
 
 export default function Clubs(props) {
+    console.log(props);
     if (props.errorCode) {
         return (<ClubNotFound />);
     }
@@ -121,7 +120,9 @@ export default function Clubs(props) {
                 </Link>
             </div>
             <div className='clubStats'>
-                <GetStats />
+                {/* <ListActivities activities={props.activities} /> */}
+                <p>Distance: {(props.stats.distance).toLocaleString()}m</p>
+                <p>{JSON.stringify(props.stats)}</p>
             </div>
         </>
     )
