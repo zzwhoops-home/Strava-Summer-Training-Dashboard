@@ -105,7 +105,6 @@ function ListActivities({ activities }) {
 }
 
 export default function Clubs(props) {
-    console.log(props);
     if (props.errorCode) {
         return (<ClubNotFound />);
     }

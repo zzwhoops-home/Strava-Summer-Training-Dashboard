@@ -1,10 +1,10 @@
 import clientPromise from "../../lib/mongodb";
+import UpdateActivities, { MultiUpdateActivities } from "./athleteActivities";
 
 export async function CalculateData() {
 }
 export async function GetStats(acts) {
-    const activities = (await acts.map(value => value.activities))[0];
-    // sum distance
+    // object with sum of statistics
     let stats = {
         activityCount: 0,
         distance: 0.0,
@@ -14,17 +14,24 @@ export async function GetStats(acts) {
         kudos: 0,
         prs: 0
     }
-    const calcDist = async (activity) => {
-        stats.activityCount++;
-        stats.distance += activity.distance;
-        stats.elevGain += activity.elevGain;
-        stats.elapsedTime += activity.elapsedTime;
-        stats.movingTime += activity.movingTime;
-        stats.kudos += activity.kudos;
-        stats.prs += activity.prs;
+
+    async function SumStats(athleteData) {
+        const activities = athleteData.activities;
+        
+        const calcDist = async (activity) => {
+            stats.activityCount++;
+            stats.distance += activity.distance;
+            stats.elevGain += activity.elevGain;
+            stats.elapsedTime += activity.elapsedTime;
+            stats.movingTime += activity.movingTime;
+            stats.kudos += activity.kudos;
+            stats.prs += activity.prs;
+        }
+        activities.forEach(calcDist);
     }
-    activities.forEach(calcDist);
     
+    await acts.forEach(SumStats);
+
     return (stats);
 }
 export async function GetClubActivities(clubId) {    
@@ -37,9 +44,31 @@ export async function GetClubActivities(clubId) {
     // get current list of registered users for our club
     const currentClub = await clubData.findOne({ id: clubId });
     const registeredUsers = currentClub.registeredUsers;
-    
+
+    // find user activities that are more than two days old and bulk update them
+    const curTime = Math.floor(Date.now() / 1000);
+    const updateQuery = {
+        id: {
+            $in: registeredUsers
+        },
+        lastUpdated: {
+            $lte: curTime - 172800
+        }
+    }
+    const updateOptions = {
+        projection: {
+            _id: 0,
+            activities: 0,
+            lastUpdated: 0
+        }
+    }
+    const oldDataCursor = await athleteActivities.find(updateQuery, updateOptions);
+    const oldData = await oldDataCursor.toArray();
+    let oldDataFormatted = await oldData.map((id=value) => id.id);
+
+    await MultiUpdateActivities(oldDataFormatted);
+
     // return massive array of user data
-    let userData = [];
     const activityArrayQuery = {
         id: {
             $in: registeredUsers
@@ -52,5 +81,8 @@ export async function GetClubActivities(clubId) {
     }
     const activityArrayCursor = await athleteActivities.find(activityArrayQuery, activityArrayOptions);
     const activityArray = await activityArrayCursor.toArray();
+
+    console.log(activityArray);
+    // console.log(await activityArray.map(value => value.id));
     return activityArray;
 }
