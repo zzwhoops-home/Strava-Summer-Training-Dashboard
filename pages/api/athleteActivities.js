@@ -126,6 +126,7 @@ export async function MultiUpdateActivities(athleteIds) {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const athleteActivities = db.collection("athlete_activities");
+    const athleteInfo = db.collection("athlete_info");
 
     // get current epoch timestamp
     const curTime = Math.floor(Date.now() / 1000);
@@ -143,6 +144,7 @@ export async function MultiUpdateActivities(athleteIds) {
 
         // find existing entry
         const existing = await athleteActivities.findOne({ id: athleteId });
+        const athlete = await athleteInfo.findOne({ id: athleteId });
 
         // create activities entry if it doesn't exist, or replace completely if the data is more than four hours old
         // return given page of activities (since limit is 200/page)

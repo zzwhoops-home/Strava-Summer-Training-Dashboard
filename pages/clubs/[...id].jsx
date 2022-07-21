@@ -42,13 +42,46 @@ export async function getServerSideProps(req, res) {
 }
 
 function ListActivities({ activities }) {
-    console.log(activities);
-
+    // const activitiesOnly = activities.map((activity=value) => activity.activities).flat().sort((a, b) => (a.kudos < b.kudos) ? 1 : -1);
+    const activitiesOnly = activities.map((activity=value) => activity.activities).flat();
+    
     return (
         <>
             <ol style={{listStyleType: "none"}}>
-
+                {activitiesOnly.map((activity=value, index=index) => (
+                    <li index={activity.activityId}>{`(${index}) ${activity.name}: ${activity.distance}m ${activity.kudos} kudos`}</li>
+                ))}
             </ol>
+        </>
+    )
+}
+
+function ClubStats({ stats }) {
+    // let stats = {
+    //     activityCount: 0,
+    //     distance: 0.0,
+    //     elevGain: 0.0,
+    //     elapsedTime: 0.0,
+    //     movingTime: 0.0,
+    //     kudos: 0,
+    //     prs: 0
+    // }
+    const convertToMiles = (dist) => {
+        return (dist / 1609);
+    }
+    const convertToFeet = (dist) => {
+        return (dist * 3.2808399);
+    }
+
+    return (
+        <>
+            <h2>Activities: {(stats.activityCount).toLocaleString()}</h2>
+            <h2>Distance: {convertToMiles(stats.distance).toLocaleString()}mi</h2>
+            <h2>Elevation Gain: {convertToFeet(stats.elevGain).toLocaleString()}ft</h2>
+            <h2>Elapsed Time: {(stats.elapsedTime).toLocaleString()}sec</h2>
+            <h2>Time Spent Running: {(stats.movingTime).toLocaleString()}sec</h2>
+            <h2>Kudos: {(stats.kudos).toLocaleString()}</h2>
+            <h2>PRs: {(stats.prs).toLocaleString()}</h2>
         </>
     )
 }
@@ -68,9 +101,7 @@ export default function Clubs(props) {
                 </Link>
             </div>
             <div className='clubStats'>
-                {/* <ListActivities activities={props.activities} /> */}
-                <p>Distance: {(props.stats.distance).toLocaleString()}m</p>
-                <p>{JSON.stringify(props.stats)}</p>
+                <ClubStats stats={props.stats} />
             </div>
             <ListActivities activities={props.activities} />
         </>
