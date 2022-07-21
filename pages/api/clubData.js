@@ -1,5 +1,5 @@
 import clientPromise from "../../lib/mongodb";
-import UpdateActivities, { MultiUpdateActivities } from "./athleteActivities";
+import { UpdateActivities, MultiUpdateActivities } from "./athleteActivities";
 
 export async function CalculateData() {
 }
@@ -84,4 +84,56 @@ export async function GetClubActivities(clubId) {
 
     // console.log(await activityArray.map(value => value.id));
     return activityArray;
+}
+
+// function to store information on who has logged in with our application
+export async function UpdateClubData(clubId, athleteId, accessToken) {
+    // query DB and club data collection
+    const client = await clientPromise;
+    const db = client.db(process.env.DB);
+    const clubData = db.collection("club_data");
+
+    // try finding existing club data
+    const existing = await clubData.findOne({ id: clubId });
+    // get current epoch timestamp
+    const curTime = Math.floor(Date.now() / 1000);
+
+    let clubName;
+    if (!existing) {
+        // get club name if club data does not exist yet
+        const clubURL = `https://www.strava.com/api/v3/clubs/${clubId}?access_token=${accessToken}`;
+        const clubResponse = await fetch(clubURL);
+        const clubResponseJSON = await clubResponse.json();
+
+        const clubDBFilter = {
+            id: clubId
+        }
+        const clubDBData = {
+            $set: {
+                id: clubId,
+                name: clubResponseJSON.name,
+                memberCount: clubResponseJSON.member_count,
+                lastUpdated: curTime
+            },
+            $addToSet: {
+                registeredUsers: athleteId
+            }
+        }
+        await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true });
+        clubName = clubResponseJSON.name;
+    } else {            
+        // otherwise just add the user to the list of users that have logged into our application
+        const clubDBFilter = {
+            id: clubId
+        }
+        const clubDBData = {
+            $addToSet: {
+                registeredUsers: athleteId
+            }
+        }
+        await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true });
+        clubName = existing.name;
+    }
+    // return to be used, may change to an object
+    return clubName;
 }
