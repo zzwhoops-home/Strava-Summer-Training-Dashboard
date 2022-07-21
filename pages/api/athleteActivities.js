@@ -3,6 +3,7 @@ import { GetAccessToken } from "./refreshTokens";
 
 // format for storing activities:
 // activity = {
+//     athleteId: athleteId
 //     activityId: id,
 //     name: name,
 //     distance: distance,
@@ -30,9 +31,11 @@ export async function UpdateActivities(athleteId, accessToken) {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const athleteActivities = db.collection("athlete_activities");
+    const athleteInfo = db.collection("athlete_info");
 
     // find existing entry
     const existing = await athleteActivities.findOne({ id: athleteId });
+    const athlete = await athleteInfo.findOne({ id: athleteId });
     // get current epoch timestamp
     const curTime = Math.floor(Date.now() / 1000);
 
@@ -61,6 +64,7 @@ export async function UpdateActivities(athleteId, accessToken) {
 
         let formattedActivities = await responses.map((activity=value) => (
             {
+                athleteId: athleteId,
                 activityId: activity.id,
                 name: activity.name,
                 distance: activity.distance,
@@ -104,6 +108,8 @@ export async function UpdateActivities(athleteId, accessToken) {
     const activitiesDBData = {
         $set: {
             id: athleteId,
+            first_name: athlete.first_name,
+            last_name: athlete.last_name,
             lastUpdated: curTime,
             activities: activities
         }
@@ -163,6 +169,7 @@ export async function MultiUpdateActivities(athleteIds) {
 
             let formattedActivities = await responses.map((activity=value) => (
                 {
+                    athleteId: athleteId,
                     activityId: activity.id,
                     name: activity.name,
                     distance: activity.distance,
@@ -206,6 +213,8 @@ export async function MultiUpdateActivities(athleteIds) {
         const activitiesDBData = {
             $set: {
                 id: athleteId,
+                first_name: athlete.first_name,
+                last_name: athlete.last_name,
                 lastUpdated: curTime,
                 activities: activities
             }
