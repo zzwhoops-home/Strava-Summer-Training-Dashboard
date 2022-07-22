@@ -66,22 +66,7 @@ function Disclaimer() {
     );
 }
 
-function ViewClubs({ id }) {
-    if (id) {
-        return (
-            <>
-                <LoggedIn id={id}/>
-                <Link href={`/users/${id}`} passHref>
-                    <a>
-                        <h2>View your clubs</h2>
-                    </a>
-                </Link>
-            </>
-        )
-    }
-}
-
-export default function HomePage() {
+function ViewClubs() {
     const [id, setId] = useState();
 
     useEffect(() => {
@@ -89,7 +74,23 @@ export default function HomePage() {
     }, []);
 
     return (
-        <div>
+        <>
+            <nav>
+                <LoggedIn />
+                <Link href={`/users/${id}`} passHref>
+                    <a>
+                        View your clubs
+                    </a>
+                </Link>
+            </nav>
+        </>
+    )
+}
+
+export default function HomePage() {
+    return (
+        <div className='content'>
+            <ViewClubs />
             <Header title="Strava Summer Dashboard" italic={true} />
             <Information />
             <Steps toDisplay={4} />
@@ -106,7 +107,6 @@ export default function HomePage() {
                     />
                 </a>
             </Link>
-            <ViewClubs id={id}/>
         </div>
     )
 }

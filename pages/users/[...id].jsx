@@ -42,29 +42,34 @@ export async function getServerSideProps(req, res) {
 }
 
 function ListClubs({ clubs, isUser }) {
+    // eventually we want to remove fitText for a table
     if (isUser) {
         return (
             <>
-                <ol style={{listStyleType: "none"}}>
-                    {clubs.map((club=value) => (
-                        <li key={club.id}>
-                            <Link href={`${serverURL}/clubs/${club.id}`}>(Click here)</Link>
-                            {` ${club.name}: ${club.member_count} members`}
-                        </li>
-                    ))}
-                </ol>
+                <div className='fitText'>
+                    <ol style={{listStyleType: "none"}}>
+                        {clubs.map((club=value) => (
+                            <li key={club.id}>
+                                <Link href={`${serverURL}/clubs/${club.id}`}>(Click here)</Link>
+                                {` ${club.name}: ${club.member_count} members`}
+                            </li>
+                        ))}
+                    </ol>
+                </div>
             </>
         );
     } else {
         return (
             <>
-                <ol style={{listStyleType: "none"}}>
-                    {clubs.map((club=value) => (
-                        <li key={club.id}>
-                            {` ${club.name}: ${club.member_count} members`}
-                        </li>
-                    ))}
-                </ol>
+                <div className='fitText'>
+                    <ol style={{listStyleType: "none"}}>
+                        {clubs.map((club=value) => (
+                            <li key={club.id}>
+                                {` ${club.name}: ${club.member_count} members`}
+                            </li>
+                        ))}
+                    </ol>
+                </div>
             </>
         );
     }
@@ -76,25 +81,16 @@ export default function Users(props) {
     }
     const athlete = props.athlete;
 
-    const [id, setId] = useState();
-    
-    useEffect(() => {
-        setId(getCookie('athleteId'))
-    }, []);
-
     return (
         <>
-            <LoggedIn id={id}/>
-            <div className='header'>
+            <div className='content'>
+                <LoggedIn />
                 <h1>User: {`${athlete.first_name} ${athlete.last_name}`}</h1>
-            </div>
-            <Link href="/">
-                <a>Back to home</a>
-            </Link>
-            <div className='clubs'>
+                <Link href="/">
+                    <a>Back to home</a>
+                </Link>
                 <ListClubs clubs={props.clubs} isUser={props.isUser} />
             </div>
-
         </>
     );
 

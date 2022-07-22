@@ -1,0 +1,26 @@
+.content { 
+    background-color: #062f46;
+    color: white;
+    padding: 10px;
+    max-width: 960px;
+    margin: 0 auto;
+    text-align: center;
+}
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0 1%;
+}
+a:link {
+    color: rgb(255, 130, 130);
+}
+a:visited {
+    color: #ffc37a;
+}
+a:hover {
+    color: white;
+}
+a:active {
+    color: aquamarine;
+}

@@ -1,10 +1,9 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { serverURL } from '../../config';
 import ClubNotFound from './club404';
 import { getCookie } from 'cookies-next';
 import { GetAccessToken } from '../api/refreshTokens';
 import { GetClubActivities, GetStats, UpdateClubData } from '../api/clubData';
+import LoggedIn from '../../components/loggedIn';
 
 export async function getServerSideProps(req, res) {
     const clubId = await parseInt(req.query.id);
@@ -75,13 +74,14 @@ function ClubStats({ stats }) {
 
     return (
         <>
-            <h2>Activities: {(stats.activityCount).toLocaleString()}</h2>
-            <h2>Distance: {convertToMiles(stats.distance).toLocaleString()}mi</h2>
-            <h2>Elevation Gain: {convertToFeet(stats.elevGain).toLocaleString()}ft</h2>
-            <h2>Elapsed Time: {(stats.elapsedTime).toLocaleString()}sec</h2>
-            <h2>Time Spent Running: {(stats.movingTime).toLocaleString()}sec</h2>
-            <h2>Kudos: {(stats.kudos).toLocaleString()}</h2>
-            <h2>PRs: {(stats.prs).toLocaleString()}</h2>
+            <h1>Stats:</h1>
+            <p>Activities: {(stats.activityCount).toLocaleString()}</p>
+            <p>Distance: {convertToMiles(stats.distance).toLocaleString()}mi</p>
+            <p>Elevation Gain: {convertToFeet(stats.elevGain).toLocaleString()}ft</p>
+            <p>Elapsed Time: {(stats.elapsedTime).toLocaleString()}sec</p>
+            <p>Time Spent Running: {(stats.movingTime).toLocaleString()}sec</p>
+            <p>Kudos: {(stats.kudos).toLocaleString()}</p>
+            <p>PRs: {(stats.prs).toLocaleString()}</p>
         </>
     )
 }
@@ -92,18 +92,17 @@ export default function Clubs(props) {
     }
     return (
         <>
-            <div className='header'>
+            <div className='content'>
+                <nav>
+                    <LoggedIn />
+                    <Link href="/">
+                        <a>Back to home</a>
+                    </Link>
+                </nav>
                 <h1>Club: {`${props.clubName}`}</h1>
-            </div>
-            <div className='homePageLink'>
-                <Link href="/">
-                    <a>Back to home</a>
-                </Link>
-            </div>
-            <div className='clubStats'>
                 <ClubStats stats={props.stats} />
+                <ListActivities activities={props.activities} />
             </div>
-            <ListActivities activities={props.activities} />
         </>
     )
 }
