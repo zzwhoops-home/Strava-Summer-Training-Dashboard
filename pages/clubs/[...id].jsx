@@ -67,33 +67,49 @@ function ClubStats({ stats }) {
     //     kudos: 0,
     //     prs: 0
     // }
+    const convertString = (num, places) => {
+        const formatted = num.toLocaleString(undefined, {minimumFractionDigits: places, maximumFractionDigits: places});
+        return formatted;
+    }
     const convertToMiles = (dist) => {
         return (dist / 1609);
     }
     const convertToFeet = (dist) => {
         return (dist * 3.2808399);
     }
+    const convertToDuration = (time) => {
+        const days = Math.floor(time / 86400);
+        const hours = Math.floor((time - (days * 86400)) / 3600);
+        const minutes = Math.floor((time - (days * 86400) - (hours * 3600)) / 60);
+        return (`${days}d ${hours}h ${minutes}m`);
+    }
 
+    const activityCount = convertString(stats.activityCount, 0);
+    const distance = convertString(convertToMiles(stats.distance), 2);
+    const elevGain = convertString(convertToFeet(stats.elevGain), 0);
+    const elapsedTime = convertToDuration(stats.elapsedTime);
+    const movingTime = convertToDuration(stats.movingTime);
+    const kudos = convertString(stats.kudos, 0);
+    const prs = convertString(stats.prs, 0);
+    
     return (
         <>
-            <div>
-                <dl className={styles.statText}>
-                    <dt className={styles.term}>Activities</dt>
-                    <dd className={styles.description}>{(stats.activityCount).toLocaleString()}</dd>
-                    <dt className={styles.term}>Distance</dt>
-                    <dd className={styles.description}>{convertToMiles(stats.distance).toLocaleString()}mi</dd>
-                    <dt className={styles.term}>Elevation Gain</dt>
-                    <dd className={styles.description}>{convertToFeet(stats.elevGain).toLocaleString()}ft</dd>
-                    <dt className={styles.term}>Elapsed Time</dt>
-                    <dd className={styles.description}>{(stats.elapsedTime).toLocaleString()}sec</dd>
-                    <dt className={styles.term}>Moving Time</dt>
-                    <dd className={styles.description}>{(stats.movingTime).toLocaleString()}sec</dd>
-                    <dt className={styles.term}>Kudos</dt>
-                    <dd className={styles.description}>{(stats.kudos).toLocaleString()}</dd>
-                    <dt className={styles.term}>PRs</dt>
-                    <dd className={styles.description}>{(stats.prs).toLocaleString()}</dd>
-                </dl>
-            </div>
+            <dl className={styles.statText}>
+                <dt className={styles.term}>Activities</dt>
+                <dd className={styles.description}>{activityCount}</dd>
+                <dt className={styles.term}>Distance</dt>
+                <dd className={styles.description}>{distance} mi</dd>
+                <dt className={styles.term}>Elevation Gain</dt>
+                <dd className={styles.description}>{elevGain} ft</dd>
+                <dt className={styles.term}>Elapsed Time</dt>
+                <dd className={styles.description} title={`${convertString(stats.elapsedTime)} sec`}>{elapsedTime}</dd>
+                <dt className={styles.term}>Moving Time</dt>
+                <dd className={styles.description} title={`${convertString(stats.movingTime)} sec`}>{movingTime}</dd>
+                <dt className={styles.term}>Kudos</dt>
+                <dd className={styles.description}>{kudos}</dd>
+                <dt className={styles.term}>PRs</dt>
+                <dd className={styles.description}>{prs}</dd>
+            </dl>
         </>
     )
 }
@@ -134,7 +150,9 @@ export default function Clubs(props) {
                 <h1 className={styles.title}>
                     <ClubHeader clubInfo={props.clubInfo}/>
                 </h1>
-                <ClubStats stats={props.stats} />
+                <div className={styles.statBorder}>
+                    <ClubStats stats={props.stats} />
+                </div>
                 <ListActivities activities={props.activities} />
             </div>
         </>
