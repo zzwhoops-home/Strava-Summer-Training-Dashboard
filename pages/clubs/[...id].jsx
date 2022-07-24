@@ -76,18 +76,42 @@ function ClubStats({ stats }) {
 
     return (
         <>
-            <div className={styles.subtitle}>
-                <p>Club Statistics</p>
+            <div>
+                <dl className={styles.statText}>
+                    <dt className={styles.term}>Activities</dt>
+                    <dd className={styles.description}>{(stats.activityCount).toLocaleString()}</dd>
+                    <dt className={styles.term}>Distance</dt>
+                    <dd className={styles.description}>{convertToMiles(stats.distance).toLocaleString()}mi</dd>
+                    <dt className={styles.term}>Elevation Gain</dt>
+                    <dd className={styles.description}>{convertToFeet(stats.elevGain).toLocaleString()}ft</dd>
+                    <dt className={styles.term}>Elapsed Time</dt>
+                    <dd className={styles.description}>{(stats.elapsedTime).toLocaleString()}sec</dd>
+                    <dt className={styles.term}>Moving Time</dt>
+                    <dd className={styles.description}>{(stats.movingTime).toLocaleString()}sec</dd>
+                    <dt className={styles.term}>Kudos</dt>
+                    <dd className={styles.description}>{(stats.kudos).toLocaleString()}</dd>
+                    <dt className={styles.term}>PRs</dt>
+                    <dd className={styles.description}>{(stats.prs).toLocaleString()}</dd>
+                </dl>
             </div>
-            <div className={styles.statText}>
-                <p>Activities: {(stats.activityCount).toLocaleString()}</p>
-                <p>Distance: {convertToMiles(stats.distance).toLocaleString()}mi</p>
-                <p>Elevation Gain: {convertToFeet(stats.elevGain).toLocaleString()}ft</p>
-                <p>Elapsed Time: {(stats.elapsedTime).toLocaleString()}sec</p>
-                <p>Time Spent Running: {(stats.movingTime).toLocaleString()}sec</p>
-                <p>Kudos: {(stats.kudos).toLocaleString()}</p>
-                <p>PRs: {(stats.prs).toLocaleString()}</p>
-            </div>
+        </>
+    )
+}
+
+function ClubHeader({ clubInfo }) {
+    return (
+        <>
+            <Image className={styles.titleBackground}
+                src={clubInfo.cover_photo ? clubInfo.cover_photo : "/strava_default_background.png"}
+                layout='fill'
+            />
+            <Image className={styles.titleImage}
+                src={clubInfo.profile=="avatar/club/large.png" ? "/large.png" : clubInfo.profile}
+                layout='intrinsic'
+                width={256}
+                height={256}
+            />
+            <span className={styles.clubName}>{`${clubInfo.name}`}</span>
         </>
     )
 }
@@ -108,15 +132,7 @@ export default function Clubs(props) {
             </div>
             <div className='content'>                        
                 <h1 className={styles.title}>
-                    <span className={styles.titleImageBorder}>
-                        <Image className={styles.titleImage}
-                            src={props.clubInfo.profile}
-                            layout='intrinsic'
-                            width={256}
-                            height={256}
-                        />
-                    </span>
-                    <span className={styles.clubName}>{`${props.clubInfo.name}`}</span>
+                    <ClubHeader clubInfo={props.clubInfo}/>
                 </h1>
                 <ClubStats stats={props.stats} />
                 <ListActivities activities={props.activities} />
