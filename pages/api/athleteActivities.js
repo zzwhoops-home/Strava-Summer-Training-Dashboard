@@ -55,7 +55,6 @@ export async function UpdateActivities(athleteId, accessToken) {
             const promise = await returnActivities(i, startTime);
             await responses.push(promise);
             // break if the array returned is empty, or under 200 entries to save requests
-            console.log(promise.length);
             if (!(Array.isArray(promise) && promise.length) || promise.length < 200) {
                 break;
             }

@@ -75,38 +75,42 @@ function ViewClubs() {
 
     return (
         <>
-            <nav>
+            <div className='loggedin'>
                 <LoggedIn />
-                <Link href={`/users/${id}`} passHref>
-                    <a>
-                        View your clubs
-                    </a>
-                </Link>
-            </nav>
+                <nav>
+                    <Link href={`/users/${id}`} passHref>
+                        <a>
+                            View your clubs
+                        </a>
+                    </Link>
+                </nav>
+            </div>
         </>
     )
 }
 
 export default function HomePage() {
     return (
-        <div className='content'>
+        <>
             <ViewClubs />
-            <Header title="Strava Summer Dashboard" italic={true} />
-            <Information />
-            <Steps toDisplay={4} />
-            <Purpose />
-            <Disclaimer />
-            <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=${serverURL}/login/&scope=activity:read_all`} passHref>
-                <a>
-                    <Image
-                        src="/strava_button_orange.png"
-                        layout="intrinsic"
-                        width={193}
-                        height={48}
-                        srcSet="2x"
-                    />
-                </a>
-            </Link>
-        </div>
+            <div className='content'>
+                <Header title="Strava Summer Dashboard" italic={true} />
+                <Information />
+                <Steps toDisplay={4} />
+                <Purpose />
+                <Disclaimer />
+                <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=${serverURL}/login/&scope=activity:read_all`} passHref>
+                    <a>
+                        <Image
+                            src="/strava_button_orange.png"
+                            layout="intrinsic"
+                            width={193}
+                            height={48}
+                            srcSet="2x"
+                            />
+                    </a>
+                </Link>
+            </div>
+        </>
     )
 }

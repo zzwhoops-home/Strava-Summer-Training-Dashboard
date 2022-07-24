@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import Image from "next/image";
 import ClubNotFound from './club404';
 import { getCookie } from 'cookies-next';
 import { GetAccessToken } from '../api/refreshTokens';
 import { GetClubActivities, GetStats, UpdateClubData } from '../api/clubData';
 import LoggedIn from '../../components/loggedIn';
+import styles from '../../styles/Clubs.module.css'
 
 export async function getServerSideProps(req, res) {
     const clubId = await parseInt(req.query.id);
@@ -22,18 +24,18 @@ export async function getServerSideProps(req, res) {
             props: {
                 errorCode: accessRes.errorCode
             }
-        })
+        });
     }
     const accessToken = accessRes.valid_access_token;
 
-    // reversing to ensure that the newest activities are first
-    const clubName = await UpdateClubData(clubId, athleteId, accessToken);
+    // call api functions for data
+    const clubInfo = await UpdateClubData(clubId, athleteId, accessToken);
     const activities = await GetClubActivities(clubId);
     const stats = await GetStats(activities);
 
     return ({
         props: {
-            clubName: clubName,
+            clubInfo: clubInfo,
             activities: activities,
             stats: stats
         }
@@ -52,7 +54,7 @@ function ListActivities({ activities }) {
                 ))}
             </ol>
         </>
-    )
+    );
 }
 
 function ClubStats({ stats }) {
@@ -74,14 +76,18 @@ function ClubStats({ stats }) {
 
     return (
         <>
-            <h1>Stats:</h1>
-            <p>Activities: {(stats.activityCount).toLocaleString()}</p>
-            <p>Distance: {convertToMiles(stats.distance).toLocaleString()}mi</p>
-            <p>Elevation Gain: {convertToFeet(stats.elevGain).toLocaleString()}ft</p>
-            <p>Elapsed Time: {(stats.elapsedTime).toLocaleString()}sec</p>
-            <p>Time Spent Running: {(stats.movingTime).toLocaleString()}sec</p>
-            <p>Kudos: {(stats.kudos).toLocaleString()}</p>
-            <p>PRs: {(stats.prs).toLocaleString()}</p>
+            <div className={styles.subtitle}>
+                <p>Club Statistics</p>
+            </div>
+            <div className={styles.statText}>
+                <p>Activities: {(stats.activityCount).toLocaleString()}</p>
+                <p>Distance: {convertToMiles(stats.distance).toLocaleString()}mi</p>
+                <p>Elevation Gain: {convertToFeet(stats.elevGain).toLocaleString()}ft</p>
+                <p>Elapsed Time: {(stats.elapsedTime).toLocaleString()}sec</p>
+                <p>Time Spent Running: {(stats.movingTime).toLocaleString()}sec</p>
+                <p>Kudos: {(stats.kudos).toLocaleString()}</p>
+                <p>PRs: {(stats.prs).toLocaleString()}</p>
+            </div>
         </>
     )
 }
@@ -92,14 +98,26 @@ export default function Clubs(props) {
     }
     return (
         <>
-            <div className='content'>
+            <div className='loggedin'>
+                <LoggedIn />
                 <nav>
-                    <LoggedIn />
                     <Link href="/">
                         <a>Back to home</a>
                     </Link>
                 </nav>
-                <h1>Club: {`${props.clubName}`}</h1>
+            </div>
+            <div className='content'>                        
+                <h1 className={styles.title}>
+                    <span className={styles.titleImageBorder}>
+                        <Image className={styles.titleImage}
+                            src={props.clubInfo.profile}
+                            layout='intrinsic'
+                            width={256}
+                            height={256}
+                        />
+                    </span>
+                    <span className={styles.clubName}>{`${props.clubInfo.name}`}</span>
+                </h1>
                 <ClubStats stats={props.stats} />
                 <ListActivities activities={props.activities} />
             </div>

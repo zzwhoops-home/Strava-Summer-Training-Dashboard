@@ -98,8 +98,8 @@ export async function UpdateClubData(clubId, athleteId, accessToken) {
     // get current epoch timestamp
     const curTime = Math.floor(Date.now() / 1000);
 
-    let clubName;
-    if (!existing) {
+    // update if club doesn't exist or two days have elapsed since last update
+    if (!existing || ((existing.lastUpdated + 172800) < curTime)) {
         // get club name if club data does not exist yet
         const clubURL = `https://www.strava.com/api/v3/clubs/${clubId}?access_token=${accessToken}`;
         const clubResponse = await fetch(clubURL);
@@ -112,6 +112,9 @@ export async function UpdateClubData(clubId, athleteId, accessToken) {
             $set: {
                 id: clubId,
                 name: clubResponseJSON.name,
+                profile: clubResponseJSON.profile,
+                cover_photo: clubResponseJSON.cover_photo_small,
+                url: clubResponseJSON.url,
                 memberCount: clubResponseJSON.member_count,
                 lastUpdated: curTime
             },
@@ -119,8 +122,8 @@ export async function UpdateClubData(clubId, athleteId, accessToken) {
                 registeredUsers: athleteId
             }
         }
-        await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true });
-        clubName = clubResponseJSON.name;
+        const response = await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true, returnDocument: "after" });
+        return JSON.parse(JSON.stringify(response));
     } else {            
         // otherwise just add the user to the list of users that have logged into our application
         const clubDBFilter = {
@@ -131,9 +134,8 @@ export async function UpdateClubData(clubId, athleteId, accessToken) {
                 registeredUsers: athleteId
             }
         }
-        await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true });
-        clubName = existing.name;
+        await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true, returnDocument: "after" });
+        // this may cause potential problems if trying to get registered users through this function but data returned is old
+        return JSON.parse(JSON.stringify(existing)); 
     }
-    // return to be used, may change to an object
-    return clubName;
 }

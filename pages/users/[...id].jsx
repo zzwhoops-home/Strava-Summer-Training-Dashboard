@@ -23,7 +23,7 @@ export async function getServerSideProps(req, res) {
             props: {
                 errorCode: clubs.errorCode
             }
-        })
+        });
     }
     
     // get athlete information
@@ -83,12 +83,16 @@ export default function Users(props) {
 
     return (
         <>
-            <div className='content'>
+            <div className='loggedin'>
                 <LoggedIn />
+                <nav>
+                    <Link href="/">
+                        <a>Back to home</a>
+                    </Link>
+                </nav>
+            </div>
+            <div className='content'>
                 <h1>User: {`${athlete.first_name} ${athlete.last_name}`}</h1>
-                <Link href="/">
-                    <a>Back to home</a>
-                </Link>
                 <ListClubs clubs={props.clubs} isUser={props.isUser} />
             </div>
         </>

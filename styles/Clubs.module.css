@@ -1,0 +1,43 @@
+.titleImage {
+    border-radius: 50%;
+}
+.titleImageBorder {
+    display: flex;
+    border-style: solid;
+    border-width: 0.2em;
+    border-color: #204a5a;
+    border-radius: 50%;
+}
+.clubName {
+    display: block;
+    /* THIS IS IMPORTANT BECAUSE WHITE SPACE WAS REPLACED WITH PRE */
+    white-space: normal;
+    word-wrap: break-word;
+    min-width: 60%;
+    max-width: 60%;
+}
+.title {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+    font-size: 4em;
+    border-bottom: 5px solid #76afcd;
+    padding-bottom: 2%;
+}
+.subtitle {
+    width: 28%;
+    border-style: solid;
+    border-color: #76afcd;
+    border-width: 10px;
+    /* flex-direction: row; */
+    color: white;
+    font-size: 2em;
+}
+.statText {
+    display: flex;
+    flex-direction: column;
+}
+.clubName{
+    color: white;
+}

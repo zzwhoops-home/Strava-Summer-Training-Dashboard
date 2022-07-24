@@ -1,5 +1,7 @@
 .login {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
+    color: white;
+    padding: 1%;
+    max-width: 960px;
+    margin: 1% auto;
+    text-align: center;
 }
