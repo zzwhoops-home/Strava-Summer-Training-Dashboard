@@ -123,7 +123,8 @@ export async function UpdateClubData(clubId, athleteId, accessToken) {
             }
         }
         const response = await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true, returnDocument: "after" });
-        return JSON.parse(JSON.stringify(response));
+        const responseJSON = await JSON.parse(JSON.stringify(response.value));
+        return responseJSON;
     } else {            
         // otherwise just add the user to the list of users that have logged into our application
         const clubDBFilter = {
@@ -134,8 +135,9 @@ export async function UpdateClubData(clubId, athleteId, accessToken) {
                 registeredUsers: athleteId
             }
         }
-        await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true, returnDocument: "after" });
+        await clubData.findOneAndUpdate(clubDBFilter, clubDBData, { upsert: true });
         // this may cause potential problems if trying to get registered users through this function but data returned is old
-        return JSON.parse(JSON.stringify(existing)); 
+        const existingJSON = JSON.parse(JSON.stringify(existing));
+        return existingJSON;
     }
 }

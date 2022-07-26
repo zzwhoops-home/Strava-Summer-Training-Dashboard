@@ -6,6 +6,7 @@ import { GetAccessToken } from '../api/refreshTokens';
 import { GetClubActivities, GetStats, UpdateClubData } from '../api/clubData';
 import LoggedIn from '../../components/loggedIn';
 import styles from '../../styles/Clubs.module.css'
+import { useEffect } from 'react';
 
 export async function getServerSideProps(req, res) {
     const clubId = await parseInt(req.query.id);
@@ -109,27 +110,36 @@ function ClubStats({ stats }) {
                 <dd className={styles.description}>{kudos}</dd>
                 <dt className={styles.term}>PRs</dt>
                 <dd className={styles.description}>{prs}</dd>
+                <dt className={styles.term}>Badges</dt>
+                <dd className={styles.description}>?/69</dd>
             </dl>
         </>
     )
 }
 
 function ClubHeader({ clubInfo }) {
+    const titleImageURL = clubInfo.profile=="avatar/club/large.png" ? "/large.png" : clubInfo.profile;
+    const titleBackgroundURL = clubInfo.cover_photo ? clubInfo.cover_photo : "/strava_default_background.png";
+
     return (
         <>
-            <Image className={styles.titleBackground}
-                src={clubInfo.cover_photo ? clubInfo.cover_photo : "/strava_default_background.png"}
-                layout='fill'
-            />
-            <Image className={styles.titleImage}
-                src={clubInfo.profile=="avatar/club/large.png" ? "/large.png" : clubInfo.profile}
-                layout='intrinsic'
-                width={256}
-                height={256}
-            />
-            <span className={styles.clubName}>{`${clubInfo.name}`}</span>
+            <div className={styles.titleBackground} style={{backgroundImage: `url(${titleBackgroundURL})`}}>
+                <div className={styles.title}>
+                    <div className={styles.titleImageContainer}>
+                        <span className={styles.titleImage} style={{backgroundImage: `url(${titleImageURL})`}}></span>
+                    </div>
+                    <div className={styles.clubName}>{`${clubInfo.name}`}</div>
+                </div>
+            </div>
         </>
     )
+}
+
+function Badges({ badges }) {
+    return (
+        <>
+        </>
+    );
 }
 
 export default function Clubs(props) {
@@ -146,13 +156,12 @@ export default function Clubs(props) {
                     </Link>
                 </nav>
             </div>
-            <div className='content'>                        
-                <h1 className={styles.title}>
-                    <ClubHeader clubInfo={props.clubInfo}/>
-                </h1>
+            <div className='content'>
+                <ClubHeader clubInfo={props.clubInfo}/>
                 <div className={styles.statBorder}>
                     <ClubStats stats={props.stats} />
                 </div>
+                <Badges />
                 <ListActivities activities={props.activities} />
             </div>
         </>
