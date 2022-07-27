@@ -10,6 +10,6 @@ module.exports = {
     //     ]
     // },
     images: {
-        domains: ['dgalywyr863hv.cloudfront.net'],
+        domains: ['dgalywyr863hv.cloudfront.net', 'genartiv.sirv.com'],
     },
 }

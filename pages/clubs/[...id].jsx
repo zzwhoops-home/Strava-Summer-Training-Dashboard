@@ -136,20 +136,40 @@ function ClubHeader({ clubInfo }) {
 }
 
 function Badges({ badges }) {
-    const arr = [0, 3, 4, 5, 10, 12, 15, 13, 12, 9, 0, 3, 4, 5, 10, 12, 15, 13, 12, 9, 15, 8, 9, 8, 7, 6, 2, 3, 1, 0];
+    const arr = [0, 3, 4, 5, 10, 12, 15, 13, 12, 9, 0, 3, 4, 5, 10, 12];
     return (
         <>
             <div className={styles.badges}>
                 <div className={styles.badgeTitle}>Badges</div>
                 <div className={styles.badgeGroup}>
+                    <div className={styles.badgeGroupLabel}>Going the distance</div>
+                    <div className={styles.badgeGroupLabel}>Climbing high</div>
                     <div className={styles.distanceBadgeGroup}>
-                        {arr.map((num=value) => {
+                        {arr.map((badge=value) => {
                             return (<div className={styles.badge}>
-                                <strong>{num}</strong>
+                                <Image
+                                    src={"https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png"}
+                                    title="hi"
+                                    layout="intrinsic"
+                                    width={256}
+                                    height={256}
+                                />
                             </div>);
                         })}
                     </div>
-                    <div className={styles.badgeGroupLabel}>Going the distance</div>
+                    <div className={styles.elevationBadgeGroup}>
+                        {arr.map((badge=value) => {
+                            return (<div className={styles.badge}>
+                                <Image
+                                    src={"https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png"}
+                                    title="hi"
+                                    layout="intrinsic"
+                                    width={256}
+                                    height={256}
+                                />
+                            </div>);
+                        })}
+                    </div>
                 </div>
             </div>
         </>

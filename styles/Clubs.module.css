@@ -94,7 +94,8 @@
 }
 .badges {
     background-color: #0d4263;
-    margin-top: 1%;
+    padding-top: 1%;
+    margin-top: 2%;
 }
 .badgeTitle {
     display: flex;
@@ -110,10 +111,10 @@
     display: grid;
     grid-auto-flow: row;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 25px 40px;
+    padding: 3%;
     background-color: #125883;
     position: relative;
-    align-items: center;
     align-items: center;
 }
 .badgeGroupLabel {
@@ -122,18 +123,30 @@
     font-size: 1.5em;
     background-color: #125883;
     align-items: center;
+    border-bottom: 2px solid rgb(103, 197, 255);
+    padding-bottom: 10px;
 }
 .distanceBadgeGroup {
     display: grid;
     grid-auto-flow: row;
-    grid-template-columns: repeat(4, 25%);
-    grid-auto-rows: 3em;
-    padding: 3%;
+    grid-template-columns: repeat(4, 90px);
+    gap: 8px 20px;
     position: relative;
     align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+.elevationBadgeGroup {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(4, 90px);
+    gap: 8px 20px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
 }
 .badge {
     color: red;
-    border: 2px dashed black;
     text-align: center;
 }
