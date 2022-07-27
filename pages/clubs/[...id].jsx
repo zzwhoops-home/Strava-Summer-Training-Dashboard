@@ -32,7 +32,7 @@ export async function getServerSideProps(req, res) {
     // call api functions for data
     const clubInfo = await UpdateClubData(clubId, athleteId, accessToken);
     const activities = await GetClubActivities(clubId);
-    const stats = await GetStats(activities);
+    const stats = await GetStats(clubId, activities);
 
     return ({
         props: {
@@ -136,8 +136,22 @@ function ClubHeader({ clubInfo }) {
 }
 
 function Badges({ badges }) {
+    const arr = [0, 3, 4, 5, 10, 12, 15, 13, 12, 9, 0, 3, 4, 5, 10, 12, 15, 13, 12, 9, 15, 8, 9, 8, 7, 6, 2, 3, 1, 0];
     return (
         <>
+            <div className={styles.badges}>
+                <div className={styles.badgeTitle}>Badges</div>
+                <div className={styles.badgeGroup}>
+                    <div className={styles.distanceBadgeGroup}>
+                        {arr.map((num=value) => {
+                            return (<div className={styles.badge}>
+                                <strong>{num}</strong>
+                            </div>);
+                        })}
+                    </div>
+                    <div className={styles.badgeGroupLabel}>Going the distance</div>
+                </div>
+            </div>
         </>
     );
 }
@@ -159,10 +173,11 @@ export default function Clubs(props) {
             <div className='content'>
                 <ClubHeader clubInfo={props.clubInfo}/>
                 <div className={styles.statBorder}>
+                    <h2>Leaderboard Placeholder</h2>
                     <ClubStats stats={props.stats} />
                 </div>
                 <Badges />
-                <ListActivities activities={props.activities} />
+                {/* <ListActivities activities={props.activities} /> */}
             </div>
         </>
     )

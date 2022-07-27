@@ -3,7 +3,12 @@ import { UpdateActivities, MultiUpdateActivities } from "./athleteActivities";
 
 export async function CalculateData() {
 }
-export async function GetStats(acts) {
+export async function GetStats(clubId, acts) {
+    // query DB and club data collection
+    const client = await clientPromise;
+    const db = client.db(process.env.DB);
+    const clubData = db.collection("club_data");
+
     // object with sum of statistics
     let stats = {
         activityCount: 0,
@@ -15,6 +20,7 @@ export async function GetStats(acts) {
         prs: 0
     }
 
+    // callback function for each activity
     async function SumStats(athleteData) {
         const activities = athleteData.activities;
         
@@ -31,6 +37,16 @@ export async function GetStats(acts) {
     }
     
     await acts.forEach(SumStats);
+
+    const clubDBFilter = {
+        id: clubId
+    }
+    const clubDBData = {
+        $set: {
+            stats: stats
+        }
+    }   
+    await clubData.updateOne(clubDBFilter, clubDBData, { upsert: true });
 
     return (stats);
 }
@@ -140,4 +156,8 @@ export async function UpdateClubData(clubId, athleteId, accessToken) {
         const existingJSON = JSON.parse(JSON.stringify(existing));
         return existingJSON;
     }
+}
+
+export async function GetBadges(clubId) {
+
 }

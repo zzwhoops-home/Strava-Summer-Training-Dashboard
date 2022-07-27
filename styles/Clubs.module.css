@@ -63,22 +63,23 @@
     padding: 2% 2% 1.5% 2%;
     grid-auto-flow: column;
     grid-template-rows: repeat(8, 12.5%);
-    grid-template-columns: 60% auto;
-    font-size: 1.25em;
+    grid-template-columns: auto 60%;
+    font-size: 1.1em;
     height: 50%;
+    width: 35%;
+    margin-left: auto;
 }
 .statBorder {
-    display: block;
+    display: flex;
     margin: 0 0 0 0;
     padding: 0% 1% 0% 1%;
-    background-color: #0a537e;
-    box-shadow: 0px 0px 3px 1px black inset;
+    background-color: #0e6496;
+    box-shadow: 0px 3px 3px -1px black inset;
     position: relative;
-    bottom: 19px;
 }
 .term {
-    font-weight: bold;
     grid-column: 1;
+    font-weight: bold;
     text-align: left;
     line-height: 1.5;
 }
@@ -88,6 +89,51 @@
     line-height: 1.5;
     /* margin-inline-end: 10%; */
 }
-.clubName{
+.clubName {
     color: white;
+}
+.badges {
+    background-color: #0d4263;
+    margin-top: 1%;
+}
+.badgeTitle {
+    display: flex;
+    font-weight: 700;
+    font-size: 1.5em;
+    height: 50px;
+    align-items: center;
+    border-bottom: 2px solid #31b0ff;
+    margin: 0 4% 2%;
+    padding: 0.5%;
+}
+.badgeGroup {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    background-color: #125883;
+    position: relative;
+    align-items: center;
+    align-items: center;
+}
+.badgeGroupLabel {
+    display: flex;
+    font-weight: 700;
+    font-size: 1.5em;
+    background-color: #125883;
+    align-items: center;
+}
+.distanceBadgeGroup {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(4, 25%);
+    grid-auto-rows: 3em;
+    padding: 3%;
+    position: relative;
+    align-items: center;
+}
+.badge {
+    color: red;
+    border: 2px dashed black;
+    text-align: center;
 }
