@@ -3,10 +3,11 @@ import Image from "next/image";
 import ClubNotFound from './club404';
 import { getCookie } from 'cookies-next';
 import { GetAccessToken } from '../api/refreshTokens';
-import { GetClubActivities, GetStats, UpdateClubData } from '../api/clubData';
+import { GetBadges, GetClubActivities, GetStats, UpdateClubData } from '../api/clubData';
 import LoggedIn from '../../components/loggedIn';
 import styles from '../../styles/Clubs.module.css'
 import { useEffect } from 'react';
+import { ImportBadges } from './importBadges';
 
 export async function getServerSideProps(req, res) {
     const clubId = await parseInt(req.query.id);
@@ -29,16 +30,20 @@ export async function getServerSideProps(req, res) {
     }
     const accessToken = accessRes.valid_access_token;
 
+    // set to true to update DB badges.
+    await ImportBadges(false);
     // call api functions for data
     const clubInfo = await UpdateClubData(clubId, athleteId, accessToken);
     const activities = await GetClubActivities(clubId);
     const stats = await GetStats(clubId, activities);
+    const badges = await GetBadges(clubId);
 
     return ({
         props: {
             clubInfo: clubInfo,
             activities: activities,
-            stats: stats
+            stats: stats,
+            badges: badges
         }
     });
 }
@@ -136,6 +141,9 @@ function ClubHeader({ clubInfo }) {
 }
 
 function Badges({ badges }) {
+    const distanceBadges = badges.filter((badge=value) => badge.type=="distance");
+    const elevationBadges = badges.filter((badge=value) => badge.type=="elevation");
+
     const arr = [0, 3, 4, 5, 10, 12, 15, 13, 12, 9, 0, 3, 4, 5, 10, 12];
     return (
         <>
@@ -145,11 +153,14 @@ function Badges({ badges }) {
                     <div className={styles.badgeGroupLabel}>Going the distance</div>
                     <div className={styles.badgeGroupLabel}>Climbing high</div>
                     <div className={styles.distanceBadgeGroup}>
-                        {arr.map((badge=value) => {
-                            return (<div className={styles.badge}>
+                        {/* REMEMBER to replace key with badge id */}
+                        {distanceBadges.map((badge=value) => {
+                            const { id, title, description, distancerequired, imageurl } = badge;
+                            const imageDisplayURL = imageurl ? imageurl : "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
+                            return (<div className={styles.badge} key={id}>
                                 <Image
-                                    src={"https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png"}
-                                    title="hi"
+                                    src={imageDisplayURL}
+                                    title={title}
                                     layout="intrinsic"
                                     width={256}
                                     height={256}
@@ -158,11 +169,13 @@ function Badges({ badges }) {
                         })}
                     </div>
                     <div className={styles.elevationBadgeGroup}>
-                        {arr.map((badge=value) => {
-                            return (<div className={styles.badge}>
+                        {elevationBadges.map((badge=value, index=index) => {
+                            const { id, title, description, distancerequired, imageurl } = badge;
+                            const imageDisplayURL = imageurl ? imageurl : "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
+                            return (<div className={styles.badge} key={id}>
                                 <Image
-                                    src={"https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png"}
-                                    title="hi"
+                                    src={imageDisplayURL}
+                                    title={title}
                                     layout="intrinsic"
                                     width={256}
                                     height={256}
@@ -196,7 +209,7 @@ export default function Clubs(props) {
                     <h2>Leaderboard Placeholder</h2>
                     <ClubStats stats={props.stats} />
                 </div>
-                <Badges />
+                <Badges badges={props.badges} />
                 {/* <ListActivities activities={props.activities} /> */}
             </div>
         </>

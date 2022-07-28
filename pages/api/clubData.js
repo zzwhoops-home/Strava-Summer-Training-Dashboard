@@ -24,14 +24,16 @@ export async function GetStats(clubId, acts) {
     async function SumStats(athleteData) {
         const activities = athleteData.activities;
         
+        stats.activityCount += activities.length;
+
         const calcDist = async (activity) => {
-            stats.activityCount++;
-            stats.distance += activity.distance;
-            stats.elevGain += activity.elevGain;
-            stats.elapsedTime += activity.elapsedTime;
-            stats.movingTime += activity.movingTime;
-            stats.kudos += activity.kudos;
-            stats.prs += activity.prs;
+            const { distance, elevGain, elapsedTime, movingTime, kudos, prs } = activity;
+            stats.distance += distance;
+            stats.elevGain += elevGain;
+            stats.elapsedTime += elapsedTime;
+            stats.movingTime += movingTime;
+            stats.kudos += kudos;
+            stats.prs += prs;
         }
         activities.forEach(calcDist);
     }
@@ -159,5 +161,37 @@ export async function UpdateClubData(clubId, athleteId, accessToken) {
 }
 
 export async function GetBadges(clubId) {
+    // query DB and club data collection
+    const client = await clientPromise;
+    const db = client.db(process.env.DB);
+    const clubData = db.collection("club_data");
+    const badgeInfo = db.collection("badge_info");
 
+    const { stats } = await clubData.findOne({ id: clubId });
+    const { distance, elevGain } = stats;
+
+    const findBadges = async () => {
+        const distanceBadgeQuery = {
+            type: "distance",
+            distancerequired: {
+                $lte: distance
+            }
+        }
+        const distanceBadgesCursor = await badgeInfo.find(distanceBadgeQuery);
+        const distanceBadges = await distanceBadgesCursor.toArray();
+
+        const elevationBadgeQuery = {
+            type: "elevation",
+            distancerequired: {
+                $lte: elevGain
+            }
+        }
+        const elevationBadgesCursor = await badgeInfo.find(elevationBadgeQuery);
+        const elevationBadges = await elevationBadgesCursor.toArray();
+
+        const allBadges = await ([...distanceBadges, ...elevationBadges]).flat();
+        return JSON.parse(JSON.stringify(allBadges));
+    }
+
+    return await findBadges();
 }
