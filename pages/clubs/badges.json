@@ -1,0 +1,155 @@
+[
+    {
+        "id": 0,
+        "type": "distance",
+        "title": "First steps",
+        "description": "It's a long, long way ahead.",
+        "distancerequired": 241402,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/first_steps.png"
+    },
+    {
+        "id": 1,
+        "type": "distance",
+        "title": "Light work",
+        "description": "Run 100 5Ks.",
+        "distancerequired": 500000,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/light_work.png"
+    },
+    {
+        "id": 2,
+        "type": "distance",
+        "title": "Marathon of marathons",
+        "description": "Run 26.2 marathons.",
+        "distancerequired": 1106300,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/marathon_of_marathons.png"
+    },
+    {
+        "id": 3,
+        "type": "distance",
+        "title": "That song",
+        "description": "Cause you know I'd walk- ...run a thousand miles",
+        "distancerequired": 1609344
+    },
+    {
+        "id": 4,
+        "type": "distance",
+        "title": "Brisket calls",
+        "description": "Run to Smirk's house for brisket 100 times!",
+        "distancerequired": 2574950
+    },
+    {
+        "id": 5,
+        "type": "distance",
+        "title": "Springer to Katahdin",
+        "description": "We've traveled the entire length of the Appalachian trail!",
+        "distancerequired": 3531384
+    },
+    {
+        "id": 6,
+        "type": "distance",
+        "title": "The Other Side",
+        "description": "Run all the way to San Francisco.",
+        "distancerequired": 4747565
+    },
+    {
+        "id": 7,
+        "type": "distance",
+        "title": "And now you're stuck!",
+        "description": "Construct a tunnel to the Earth's center and run to it.",
+        "distancerequired": 6371071
+    },
+    {
+        "id": 8,
+        "type": "distance",
+        "title": "5 millennia... in miles",
+        "description": "How far we've come... and so much further to go.",
+        "distancerequired": 8046720
+    },
+    {
+        "id": 9,
+        "type": "distance",
+        "title": "4x4x400mi",
+        "description": "The longest track workout you've ever run.",
+        "distancerequired": 10299802
+    },
+    {
+        "id": 10,
+        "type": "distance",
+        "title": "Goku's Worst Nightmare",
+        "description": "Run Over Nine Thousand! miles.",
+        "distancerequired": 14485705
+    },
+    {
+        "id": 11,
+        "type": "distance",
+        "title": "Who's Darién?",
+        "description": "Travel the entire length of the Pan-American highway.",
+        "distancerequired": 30577536
+    },
+    {
+        "id": 100,
+        "type": "elevation",
+        "title": "A hilly journey begins",
+        "description": "The hill doesn't ever seem to end...",
+        "distancerequired": 1609.34,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/a_hilly_journey.png"
+    },
+    {
+        "id": 101,
+        "type": "elevation",
+        "title": "600th floor, please",
+        "description": "Ascend the height of the Empire State Building 10 times!",
+        "distancerequired": 3810,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/600th_floor.png"
+    },
+    {
+        "id": 102,
+        "type": "elevation",
+        "title": "Surmountable",
+        "description": "Climb to the tallest mountain in North America, Mt. Denali.",
+        "distancerequired": 6193.54,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/surmountable.png"
+    },
+    {
+        "id": 103,
+        "type": "elevation",
+        "title": "The air's not so thin here",
+        "description": "Climb to the top of Mount Everest.",
+        "distancerequired": 8848.95
+    },
+    {
+        "id": 104,
+        "type": "elevation",
+        "title": "Watch the engines",
+        "description": "Ascend as high as an airplane flies.",
+        "distancerequired": 10972.8
+    },
+    {
+        "id": 105,
+        "type": "elevation",
+        "title": "SPF 500 required",
+        "description": "Enter Earth's ozone layer.",
+        "distancerequired": 15240
+    },
+    {
+        "id": 106,
+        "type": "elevation",
+        "title": "Hold your eruption",
+        "description": "Climb to the top of Olympus Mons.",
+        "distancerequired": 21945.6
+    },
+    {
+        "id": 107,
+        "type": "elevation",
+        "title": "6 figures",
+        "description": "Well, that is, in feet of course.",
+        "distancerequired": 30480
+    },
+    {
+        "id": 108,
+        "type": "elevation",
+        "title": "4 minutes, 27 seconds",
+        "description": "How long it took computer scientist Alan Eustace to freefall this distance.",
+        "distancerequired": 41418.97
+    }
+]
