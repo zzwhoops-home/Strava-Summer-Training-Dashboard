@@ -140,7 +140,9 @@ function ClubHeader({ clubInfo }) {
     )
 }
 
-function Badges({ badges }) {
+function Badges({ stats, badges }) {
+    const { distance, elevGain } = stats;
+
     const distanceBadges = badges.filter((badge=value) => badge.type=="distance");
     const elevationBadges = badges.filter((badge=value) => badge.type=="elevation");
 
@@ -157,14 +159,22 @@ function Badges({ badges }) {
                         {distanceBadges.map((badge=value) => {
                             const { id, title, description, distancerequired, imageurl } = badge;
                             const imageDisplayURL = imageurl ? imageurl : "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
-                            return (<div className={styles.badge} key={id}>
+                            const distanceProgress = `${Math.round((distance / distancerequired) * 10000) / 100}%  complete`
+                            
+                            return (<div className={`${styles.badge} tooltipBadge`} key={id}>
                                 <Image
                                     src={imageDisplayURL}
-                                    title={title}
+                                    title={`${title} - ${description}`}
                                     layout="intrinsic"
                                     width={256}
                                     height={256}
                                 />
+                                <div className="tooltipInfo">
+                                    <div className="tooltipInfo__title">{title}</div>
+                                    <div className="tooltipInfo__description">{description}</div>
+                                    <div className="tooltipInfo__requirement">{distanceProgress}</div>
+                                    <div className="tooltipInfo__requirement">Goal: {Math.round(distancerequired).toLocaleString()}m</div>
+                                </div>
                             </div>);
                         })}
                     </div>
@@ -172,14 +182,22 @@ function Badges({ badges }) {
                         {elevationBadges.map((badge=value, index=index) => {
                             const { id, title, description, distancerequired, imageurl } = badge;
                             const imageDisplayURL = imageurl ? imageurl : "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
-                            return (<div className={styles.badge} key={id}>
+                            const elevationProgress = `${Math.round((elevGain / distancerequired) * 10000) / 100}%  complete`
+
+                            return (<div className={`${styles.badge} tooltipBadge`} key={id}>
                                 <Image
                                     src={imageDisplayURL}
-                                    title={title}
+                                    title={`${title} - ${description}`}
                                     layout="intrinsic"
                                     width={256}
                                     height={256}
                                 />
+                                <div className="tooltipInfo">
+                                    <div className="tooltipInfo__title">{title}</div>
+                                    <div className="tooltipInfo__description">{description}</div>
+                                    <div className="tooltipInfo__requirement">{elevationProgress}</div>
+                                    <div className="tooltipInfo__requirement">Goal: {Math.round(distancerequired).toLocaleString()}m</div>
+                                </div>
                             </div>);
                         })}
                     </div>
@@ -209,7 +227,7 @@ export default function Clubs(props) {
                     <h2>Leaderboard Placeholder</h2>
                     <ClubStats stats={props.stats} />
                 </div>
-                <Badges badges={props.badges} />
+                <Badges stats={props.stats} badges={props.badges} />
                 {/* <ListActivities activities={props.activities} /> */}
             </div>
         </>
