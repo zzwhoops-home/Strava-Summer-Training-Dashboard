@@ -42,7 +42,7 @@ function Error({ response }) {
 }
 
 function LoggedIn({ props }) {
-    return (<h>One moment, fetching your data...</h>)
+    return (<h1 style={{color: "white"}}>One moment, fetching your data...</h1>)
 }
 
 export default function LoginPage(props) {
