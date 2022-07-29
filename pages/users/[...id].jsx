@@ -8,6 +8,7 @@ import UserNotFound from './user404';
 import LoggedIn from '../../components/loggedIn';
 import { GetClubs } from '../api/athleteClubs';
 import styles from '../../styles/Users.module.css'
+import { Calculation } from '../api/calculatePP';
 
 export async function getServerSideProps(req, res) {
     const loggedInAthleteId = await parseInt(req.req.cookies.athleteId);
@@ -30,7 +31,8 @@ export async function getServerSideProps(req, res) {
     const athlete = await athleteInfo.findOne({ id: athleteId });
     const athleteJSON = await JSON.parse(JSON.stringify(athlete));
 
-    const isUser = loggedInAthleteId == athleteId ? true : false
+    const isUser = loggedInAthleteId == athleteId ? true : false;
+    await Calculation();
 
     return ({
         props: {
