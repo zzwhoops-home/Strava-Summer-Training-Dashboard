@@ -28,14 +28,16 @@
         "type": "distance",
         "title": "That song",
         "description": "Cause you know I'd walk- ...run a thousand miles",
-        "distancerequired": 1609344
+        "distancerequired": 1609344,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/that_song.png"
     },
     {
         "id": 4,
         "type": "distance",
         "title": "Brisket calls",
         "description": "Run to Smirk's house for brisket 100 times!",
-        "distancerequired": 2574950
+        "distancerequired": 2574950,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/brisket_calls.png"
     },
     {
         "id": 5,
@@ -115,21 +117,24 @@
         "type": "elevation",
         "title": "The air's not so thin here",
         "description": "Climb to the top of Mount Everest.",
-        "distancerequired": 8848.95
+        "distancerequired": 8848.95,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/airs_not_thin.png"
     },
     {
         "id": 104,
         "type": "elevation",
         "title": "Watch the engines",
         "description": "Ascend as high as an airplane flies.",
-        "distancerequired": 10972.8
+        "distancerequired": 10972.8,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/watch_the_engines.png"
     },
     {
         "id": 105,
         "type": "elevation",
         "title": "SPF 500 required",
         "description": "Enter Earth's ozone layer.",
-        "distancerequired": 15240
+        "distancerequired": 15240,
+        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/SPF_500.png"
     },
     {
         "id": 106,

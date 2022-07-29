@@ -7,7 +7,10 @@ export async function ImportBadges(update) {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const badgeInfo = db.collection("badge_info");
+
+    // remove DB data first
+    await badgeInfo.drop();
     
     const badgeData = await badges.map((value=value) => value);
-    badgeInfo.insertMany(badgeData);
+    await badgeInfo.insertMany(badgeData);
 }
