@@ -39,11 +39,11 @@
     display: flex;
     align-items: center;
     position: relative;
-    height: min(15em, 300px);
+    height: 10%;
     color: white;
     border-radius: 5% 5% 0 0;
     padding: 2% 1% 2% 1%;
-    background-color: rgba(6, 47, 70, 0.5);
+    background-color: #062f4680;
     gap: 5%;
 }
 /* .subtitle {

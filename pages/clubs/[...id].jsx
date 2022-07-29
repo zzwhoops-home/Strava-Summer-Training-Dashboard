@@ -145,8 +145,6 @@ function Badges({ stats, badges }) {
 
     const distanceBadges = badges.filter((badge=value) => badge.type=="distance");
     const elevationBadges = badges.filter((badge=value) => badge.type=="elevation");
-
-    const arr = [0, 3, 4, 5, 10, 12, 15, 13, 12, 9, 0, 3, 4, 5, 10, 12];
     return (
         <>
             <div className={styles.badges}>
@@ -164,7 +162,6 @@ function Badges({ stats, badges }) {
                             return (<div className={`${styles.badge} tooltipBadge`} key={id}>
                                 <Image
                                     src={imageDisplayURL}
-                                    title={`${title} - ${description}`}
                                     layout="intrinsic"
                                     width={256}
                                     height={256}
@@ -187,7 +184,6 @@ function Badges({ stats, badges }) {
                             return (<div className={`${styles.badge} tooltipBadge`} key={id}>
                                 <Image
                                     src={imageDisplayURL}
-                                    title={`${title} - ${description}`}
                                     layout="intrinsic"
                                     width={256}
                                     height={256}

@@ -1,13 +1,13 @@
 import clientPromise from '../../lib/mongodb';
 import Link from 'next/link';
+import Image from "next/image";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { serverURL } from '../../config';
-import Error from 'next/error';
 import UserNotFound from './user404';
-import { getCookie } from 'cookies-next';
 import LoggedIn from '../../components/loggedIn';
 import { GetClubs } from '../api/athleteClubs';
+import styles from '../../styles/Users.module.css'
 
 export async function getServerSideProps(req, res) {
     const loggedInAthleteId = await parseInt(req.req.cookies.athleteId);
@@ -74,12 +74,25 @@ function ListClubs({ clubs, isUser }) {
         );
     }
 }
+function UserHeader({ athlete }) {
+    const avatarURL = athlete.avatar_link ? athlete.avatar_link : "/strava_default_background.png";
+
+    return (
+        <div className={styles.title}>
+            <div className={styles.name}>{`${athlete.first_name} ${athlete.last_name}`}</div>
+            <div className={styles.titleImage} style={{backgroundImage: `url(${avatarURL})`}}></div>
+        </div>
+    );
+}
+
+function Activities() {
+
+}
 
 export default function Users(props) {
     if (props.errorCode) {
         return (<UserNotFound />);
     }
-    const athlete = props.athlete;
 
     return (
         <>
@@ -92,7 +105,8 @@ export default function Users(props) {
                 </nav>
             </div>
             <div className='content'>
-                <h1>User: {`${athlete.first_name} ${athlete.last_name}`}</h1>
+                <UserHeader athlete={props.athlete} />
+                <Activities />
                 <ListClubs clubs={props.clubs} isUser={props.isUser} />
             </div>
         </>
