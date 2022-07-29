@@ -97,7 +97,7 @@ export async function UpdateActivities(athleteId, accessToken) {
         activities = await getActivities(startTime);
     } else {
         // return database activities, don't query db or strava API
-        return;
+        return existing.activities;
     }
 
     // update DB with new clubs, if user doesn't exist create a new entry.
@@ -117,6 +117,7 @@ export async function UpdateActivities(athleteId, accessToken) {
         upsert: true
     }
     await athleteActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, activitiesDBArrayFilter);
+    return activities;
 }
 
 // athleteIds: Array[number]
@@ -203,7 +204,7 @@ export async function MultiUpdateActivities(athleteIds) {
             const startTime = 1655784000
             activities = await getActivities(startTime);
         } else {
-            // return database activities, don't query db or strava API
+            // break function if athlete already exists
             return;
         }
 

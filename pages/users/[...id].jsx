@@ -8,7 +8,9 @@ import UserNotFound from './user404';
 import LoggedIn from '../../components/loggedIn';
 import { GetClubs } from '../api/athleteClubs';
 import styles from '../../styles/Users.module.css'
-import { Calculation } from '../api/calculatePP';
+import { PerformanceCalculation } from '../api/calculatePP';
+import { UpdateActivities } from '../api/athleteActivities';
+import { GetAccessToken } from '../api/refreshTokens';
 
 export async function getServerSideProps(req, res) {
     const loggedInAthleteId = await parseInt(req.req.cookies.athleteId);
@@ -16,8 +18,21 @@ export async function getServerSideProps(req, res) {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const athleteInfo = db.collection("athlete_info");
+
+    // GET valid access token from API endpoint
+    const accessRes = await GetAccessToken(athleteId);
+    if (accessRes.errorCode) {
+        return ({
+            props: {
+                errorCode: accessRes.errorCode
+            }
+        });
+    }
+    const accessToken = accessRes.valid_access_token;
     
     const clubs = await GetClubs(athleteId);
+    const activities = await UpdateActivities(athleteId, accessToken);
+    const activitiesJSON = await JSON.parse(JSON.stringify(activities));
 
     if (clubs.errorCode) {
         return ({
@@ -32,12 +47,13 @@ export async function getServerSideProps(req, res) {
     const athleteJSON = await JSON.parse(JSON.stringify(athlete));
 
     const isUser = loggedInAthleteId == athleteId ? true : false;
-    // await Calculation();
+    await PerformanceCalculation(athleteId, accessToken);
 
     return ({
         props: {
             athlete: athleteJSON,
             clubs: clubs,
+            activities: activitiesJSON,
             isUser: isUser
         }
     });
@@ -78,7 +94,6 @@ function ListClubs({ clubs, isUser }) {
 }
 function UserHeader({ athlete }) {
     const avatarURL = athlete.avatar_link ? athlete.avatar_link : "/strava_default_background.png";
-    console.log(avatarURL);
 
     return (
         <div className={styles.title}>
@@ -99,12 +114,12 @@ export default function Users(props) {
     const [name, setName] = useState("");
 
     useEffect(() => {
-        setName(`${props.athlete.first_name} ${props.athlete.last_name}`);
+        setName(` - ${props.athlete.first_name} ${props.athlete.last_name}`);
     }, []);
 
     return (
         <>
-            <title>User - {name}</title>
+            <title>User</title>
             <div className='loggedin'>
                 <LoggedIn />
                 <nav>

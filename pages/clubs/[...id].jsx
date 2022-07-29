@@ -212,12 +212,12 @@ export default function Clubs(props) {
     const [clubName, setClubName] = useState("");
 
     useEffect(() => {
-        setClubName(props.clubInfo.name);
+        setClubName(` - ${props.clubInfo.name}`);
     }, []);
 
     return (
         <>
-            <title>Dashboard - {clubName}</title>
+            <title>Dashboard{clubName}</title>
             <div className='loggedin'>
                 <LoggedIn />
                 <nav>
