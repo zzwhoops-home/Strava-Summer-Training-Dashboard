@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import Image from "next/image";
 import ClubNotFound from './club404';
+import { useState, useEffect } from 'react';
 import { getCookie } from 'cookies-next';
 import { GetAccessToken } from '../api/refreshTokens';
 import { GetBadges, GetClubActivities, GetStats, UpdateClubData } from '../api/clubData';
 import LoggedIn from '../../components/loggedIn';
 import styles from '../../styles/Clubs.module.css'
-import { useEffect } from 'react';
 import { ImportBadges } from './importBadges';
 
 export async function getServerSideProps(req, res) {
@@ -162,6 +162,7 @@ function Badges({ stats, badges }) {
                             return (<div className={`${styles.badge} tooltipBadge`} key={id}>
                                 <Image
                                     src={imageDisplayURL}
+                                    alt={`${title}`}
                                     layout="intrinsic"
                                     width={256}
                                     height={256}
@@ -184,6 +185,7 @@ function Badges({ stats, badges }) {
                             return (<div className={`${styles.badge} tooltipBadge`} key={id}>
                                 <Image
                                     src={imageDisplayURL}
+                                    alt={`${title}`}
                                     layout="intrinsic"
                                     width={256}
                                     height={256}
@@ -207,8 +209,15 @@ export default function Clubs(props) {
     if (props.errorCode) {
         return (<ClubNotFound />);
     }
+    const [clubName, setClubName] = useState("");
+
+    useEffect(() => {
+        setClubName(props.clubInfo.name);
+    }, []);
+
     return (
         <>
+            <title>Dashboard - {clubName}</title>
             <div className='loggedin'>
                 <LoggedIn />
                 <nav>

@@ -92,6 +92,7 @@ function ViewClubs() {
 export default function HomePage() {
     return (
         <>
+            <title>Strava Summer Training Dashboard</title>
             <ViewClubs />
             <div className='content'>
                 <Header title="Strava Summer Dashboard" italic={true} />

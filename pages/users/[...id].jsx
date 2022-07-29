@@ -32,7 +32,7 @@ export async function getServerSideProps(req, res) {
     const athleteJSON = await JSON.parse(JSON.stringify(athlete));
 
     const isUser = loggedInAthleteId == athleteId ? true : false;
-    await Calculation();
+    // await Calculation();
 
     return ({
         props: {
@@ -78,6 +78,7 @@ function ListClubs({ clubs, isUser }) {
 }
 function UserHeader({ athlete }) {
     const avatarURL = athlete.avatar_link ? athlete.avatar_link : "/strava_default_background.png";
+    console.log(avatarURL);
 
     return (
         <div className={styles.title}>
@@ -95,9 +96,15 @@ export default function Users(props) {
     if (props.errorCode) {
         return (<UserNotFound />);
     }
+    const [name, setName] = useState("");
+
+    useEffect(() => {
+        setName(`${props.athlete.first_name} ${props.athlete.last_name}`);
+    }, []);
 
     return (
         <>
+            <title>User - {name}</title>
             <div className='loggedin'>
                 <LoggedIn />
                 <nav>
