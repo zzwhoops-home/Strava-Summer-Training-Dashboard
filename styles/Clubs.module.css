@@ -160,4 +160,6 @@
     animation: 1.5s cubic-bezier(0.42, 0, 0.28, 1.25) 0s 1 fadeIn;
     color: white;
     text-align: center;
+    width: 100%;
+    height: auto;
 }

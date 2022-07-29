@@ -1,13 +1,9 @@
-import clientPromise from "../../lib/mongodb";
+// import clientPromise from "../../lib/mongodb";
 
 export async function Calculation() {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const athleteActivities = db.collection("athlete_activities");
-
-    const athlete = await athleteActivities.findOne({ id: 31849223 });
-    const activity = await athlete.activities[1];
-    console.log(activity);
 
     const { distance, elevGain, movingTime, elapsedTime, groupSize } = activity;
 

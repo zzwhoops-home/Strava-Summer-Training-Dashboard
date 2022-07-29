@@ -97,7 +97,7 @@ export async function UpdateActivities(athleteId, accessToken) {
         activities = await getActivities(startTime);
     } else {
         // return database activities, don't query db or strava API
-        return existing.activities;
+        return;
     }
 
     // update DB with new clubs, if user doesn't exist create a new entry.
@@ -204,7 +204,7 @@ export async function MultiUpdateActivities(athleteIds) {
             activities = await getActivities(startTime);
         } else {
             // return database activities, don't query db or strava API
-            return existing.activities;
+            return;
         }
 
         // update DB with new clubs, if user doesn't exist create a new entry.

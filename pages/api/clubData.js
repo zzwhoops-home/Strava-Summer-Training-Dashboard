@@ -80,6 +80,7 @@ export async function GetClubActivities(clubId) {
             lastUpdated: 0
         }
     }
+    // find all users in the list of registered users whose data needs to be updated
     const oldDataCursor = await athleteActivities.find(updateQuery, updateOptions);
     const oldData = await oldDataCursor.toArray();
     let oldDataFormatted = await oldData.map((id=value) => id.id);
