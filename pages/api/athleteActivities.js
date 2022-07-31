@@ -1,6 +1,54 @@
 import clientPromise from "../../lib/mongodb";
 import { GetAccessToken } from "./refreshTokens";
 
+export async function GetAthleteStats(athleteId, acts) {
+    // query DB and club data collection
+    const client = await clientPromise;
+    const db = client.db(process.env.DB);
+    const athleteActivities = db.collection("athlete_activities");
+
+    // object with sum of statistics
+    let stats = {
+        activityCount: 0,
+        distance: 0.0,
+        elevGain: 0.0,
+        elapsedTime: 0.0,
+        movingTime: 0.0,
+        kudos: 0,
+        prs: 0
+    }
+
+    // callback function for each activity
+    async function SumStats(activities) {        
+        stats.activityCount += activities.length;
+
+        const calcDist = async (activity) => {
+            const { distance, elevGain, elapsedTime, movingTime, kudos, prs } = activity;
+            stats.distance += distance;
+            stats.elevGain += elevGain;
+            stats.elapsedTime += elapsedTime;
+            stats.movingTime += movingTime;
+            stats.kudos += kudos;
+            stats.prs += prs;
+        }
+        activities.forEach(calcDist);
+    }
+    
+    await SumStats(acts);
+
+    const clubDBFilter = {
+        id: clubId
+    }
+    const clubDBData = {
+        $set: {
+            stats: stats
+        }
+    }   
+    await clubData.updateOne(clubDBFilter, clubDBData, { upsert: true });
+
+    return (stats);
+}
+
 // format for storing activities:
 // activity = {
 //     athleteId: athleteId

@@ -30,6 +30,7 @@ export async function PerformanceCalculation(athleteId, accessToken) {
         // small bonus for running with others
         const groupBonus = Math.pow((groupSize * 3) - 3, 0.5);
     
+        // group bonus is separate from elapsed multiplier
         const totalPP = ((elevationPP + runningPP) * elapsedMulti) + groupBonus;
     
         const activityPerformance = {
@@ -42,7 +43,8 @@ export async function PerformanceCalculation(athleteId, accessToken) {
             elapsedMulti: elapsedMulti,
             groupBonus: groupBonus,
             totalPP: totalPP
-        }    
+        }
+        // match if activity performance breakdown doesn't exist yet
         const updateFilter = {
             "id": athleteId,
             "activities.activityId": activityId,
@@ -65,7 +67,7 @@ export async function PerformanceCalculation(athleteId, accessToken) {
 
     const activities = await UpdateActivities(athleteId, accessToken);
     await activities.forEach(CalculatePP);
-    await athleteActivities.bulkWrite(updates);
+    console.log(await athleteActivities.bulkWrite(updates));
 
     // // in case if we want to remove activity performance for reworks, recalculating, activity model changes, etc...
     // const removeFilter = {

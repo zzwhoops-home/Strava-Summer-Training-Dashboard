@@ -4,7 +4,7 @@ import ClubNotFound from './club404';
 import { useState, useEffect } from 'react';
 import { getCookie } from 'cookies-next';
 import { GetAccessToken } from '../api/refreshTokens';
-import { GetBadges, GetClubActivities, GetStats, UpdateClubData } from '../api/clubData';
+import { GetBadges, GetClubActivities, GetClubStats, UpdateClubData } from '../api/clubData';
 import LoggedIn from '../../components/loggedIn';
 import styles from '../../styles/Clubs.module.css'
 import { ImportBadges } from './importBadges';
@@ -35,7 +35,7 @@ export async function getServerSideProps(req, res) {
     // call api functions for data
     const clubInfo = await UpdateClubData(clubId, athleteId, accessToken);
     const activities = await GetClubActivities(clubId);
-    const stats = await GetStats(clubId, activities);
+    const stats = await GetClubStats(clubId, activities);
     const badges = await GetBadges(clubId);
 
     return ({
@@ -49,14 +49,15 @@ export async function getServerSideProps(req, res) {
 }
 
 function ListActivities({ activities }) {
-    // const activitiesOnly = activities.map((activity=value) => activity.activities).flat().sort((a, b) => (a.kudos < b.kudos) ? 1 : -1);
-    const activitiesOnly = activities.map((activity=value) => activity.activities).flat();
+    console.table(activities);
+    const activitiesOnly = activities.map((activity=value) => activity.activities).flat().sort((a, b) => (a.distance < b.distance) ? 1 : -1);
+    // console.log(activitiesOnly)
     
     return (
         <>
             <ol style={{listStyleType: "none"}}>
                 {activitiesOnly.map((activity=value, index=index) => (
-                    <li index={activity.activityId}>{`(${index}) ${activity.name}: ${activity.distance}m ${activity.kudos} kudos`}</li>
+                    <li index={activity.activityId}>{`(${index}) ${activity.athleteId} ${activity.name}: ${activity.distance}m ${activity.kudos} kudos -- ${Math.round((activity.activityPerformance ? activity.activityPerformance.totalPP : 0) * 100) / 100}PP`}</li>
                 ))}
             </ol>
         </>
@@ -233,7 +234,7 @@ export default function Clubs(props) {
                     <ClubStats stats={props.stats} />
                 </div>
                 <Badges stats={props.stats} badges={props.badges} />
-                {/* <ListActivities activities={props.activities} /> */}
+                <ListActivities activities={props.activities} />
             </div>
         </>
     )

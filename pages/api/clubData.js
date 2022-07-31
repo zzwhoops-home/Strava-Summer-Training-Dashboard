@@ -3,7 +3,7 @@ import { UpdateActivities, MultiUpdateActivities } from "./athleteActivities";
 
 export async function CalculateData() {
 }
-export async function GetStats(clubId, acts) {
+export async function GetClubStats(clubId, acts) {
     // query DB and club data collection
     const client = await clientPromise;
     const db = client.db(process.env.DB);
