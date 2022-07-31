@@ -2,6 +2,7 @@ import clientPromise from '../../lib/mongodb';
 import Link from 'next/link';
 import Image from "next/image";
 import { useState, useEffect } from 'react';
+import { useTable } from 'react-table';
 import { useRouter } from 'next/router';
 import { serverURL } from '../../config';
 import UserNotFound from './user404';
@@ -59,34 +60,48 @@ export async function getServerSideProps(req, res) {
     });
 }
 
+function ClubsList({ clubs, isUser }) {
+
+}
+
 function ListClubs({ clubs, isUser }) {
     // eventually we want to remove fitText for a table
     if (isUser) {
         return (
             <>
-                <div className='fitText'>
-                    <ol style={{listStyleType: "none"}}>
-                        {clubs.map((club=value) => (
-                            <li key={club.id}>
-                                <Link href={`${serverURL}/clubs/${club.id}`}>(Click here)</Link>
-                                {` ${club.name}: ${club.member_count} members`}
-                            </li>
-                        ))}
-                    </ol>
+                <div className={styles.clubs}>
+                    <div className={styles.clubsTitle}>
+                        User Clubs
+                    </div>
+                    <div className={styles.clubsList}>
+                        <ol style={{listStyleType: "none"}}>
+                            {clubs.map((club=value) => (
+                                <li key={club.id}>
+                                    <Link href={`${serverURL}/clubs/${club.id}`}>(Click here)</Link>
+                                    {` ${club.name}: ${club.member_count} members`}
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
                 </div>
             </>
         );
     } else {
         return (
             <>
-                <div className='fitText'>
-                    <ol style={{listStyleType: "none"}}>
-                        {clubs.map((club=value) => (
-                            <li key={club.id}>
-                                {` ${club.name}: ${club.member_count} members`}
-                            </li>
-                        ))}
-                    </ol>
+                <div className={styles.clubList}>
+                    <div className={styles.clubSubtitle}>
+                        User Clubs
+                    </div>
+                    <div className={styles.clubs}>
+                        <ol style={{listStyleType: "none"}}>
+                            {clubs.map((club=value) => (
+                                <li key={club.id}>
+                                    {` ${club.name}: ${club.member_count} members`}
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
                 </div>
             </>
         );
