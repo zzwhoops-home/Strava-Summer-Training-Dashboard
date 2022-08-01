@@ -64,7 +64,7 @@ function ListActivities({ activities }) {
     );
 }
 
-function ClubStats({ stats }) {
+function ClubStats({ stats, badgeCount }) {
     // let stats = {
     //     activityCount: 0,
     //     distance: 0.0,
@@ -117,7 +117,7 @@ function ClubStats({ stats }) {
                 <dt className={styles.term}>PRs</dt>
                 <dd className={styles.description}>{prs}</dd>
                 <dt className={styles.term}>Badges</dt>
-                <dd className={styles.description}>?/69</dd>
+                <dd className={styles.description}>{badgeCount}/24</dd>
             </dl>
         </>
     )
@@ -235,10 +235,10 @@ export default function Clubs(props) {
                 <ClubHeader clubInfo={props.clubInfo}/>
                 <div className={styles.statBorder}>
                     <h2>Leaderboard Placeholder</h2>
-                    <ClubStats stats={props.stats} />
+                    <ClubStats stats={props.stats} badgeCount={props.badges.length} />
                 </div>
                 <Badges stats={props.stats} badges={props.badges} />
-                <ListActivities activities={props.activities} />
+                {/* <ListActivities activities={props.activities} /> */}
             </div>
         </>
     )
