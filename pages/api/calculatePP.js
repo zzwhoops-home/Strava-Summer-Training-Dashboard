@@ -7,8 +7,8 @@ export async function PerformanceCalculation(athleteId, accessToken) {
     const athleteActivities = db.collection("athlete_activities");
 
     let updates = [];
-    // REMOVE LATER FOR ACTUAL PP CALCULATION
-    let performance = 0.0;
+
+    let performances = [];
 
     const CalculatePP = async (activity) => {
         const { activityId, distance, elevGain, movingTime, elapsedTime, groupSize } = activity;
@@ -35,8 +35,8 @@ export async function PerformanceCalculation(athleteId, accessToken) {
         // group bonus is separate from elapsed multiplier
         const totalPP = ((elevationPP + runningPP) * elapsedMulti) + groupBonus;
 
-        // REMOVE LATER FOR ACTUAL PP CALCULATION
-        performance += totalPP;
+        // add totalPP only to calculate weighted PP
+        performances.push(totalPP);
     
         const activityPerformance = {
             elevationPP: elevationPP,
@@ -74,7 +74,20 @@ export async function PerformanceCalculation(athleteId, accessToken) {
     await activities.forEach(CalculatePP);
     await athleteActivities.bulkWrite(updates);
 
-    return performance;
+    // calculate performances using weighting, decreasing by 0.95^run index each time
+    await performances.sort((a, b) => (a < b) ? 1 : -1);
+    const formattedPerformances = await performances.slice(0, 25);
+
+    let weightedPerformance = 0.0;
+    for (let i = 0; i < formattedPerformances.length; i++) {
+        let mult = Math.pow(0.95, i);
+        let curValue = formattedPerformances[i] * mult;
+        weightedPerformance += curValue;
+    }
+
+    const athletePerformance = await Math.round(weightedPerformance).toLocaleString();
+
+    return athletePerformance;
 
     // // in case if we want to remove activity performance for reworks, recalculating, activity model changes, etc...
     // const removeFilter = {

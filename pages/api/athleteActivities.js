@@ -45,9 +45,7 @@ export async function GetAthleteStats(athleteId, acts) {
         }
     }   
     await athleteActivities.updateOne(athleteDBFilter, athleteDBData, { upsert: true });
-
-    console.table(stats);
-
+    
     return (stats);
 }
 
@@ -73,6 +71,7 @@ export async function GetAthleteStats(athleteId, acts) {
 //     groupSize: athlete_count,
 //     map: map,
 //     prs: pr_count
+//     activityPerformance: performanceObject
 // }
 
 // athleteId: number, accessToken: string

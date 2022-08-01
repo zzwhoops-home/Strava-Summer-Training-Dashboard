@@ -191,7 +191,7 @@ function AthleteOverview({ stats, performance }) {
         <div className={styles.overview}>
             <div className={styles.athletePerformance}>
                 <div className={styles.performance}>
-                    <div className={styles.score}>{(Math.round(performance * 10)/10).toLocaleString()}</div>
+                    <div className={styles.score}>{performance}</div>
                     <div className={styles.label}>Performance Score</div>
                 </div>
                 <div className={`${styles.info} ${styles.tooltip}`}>
