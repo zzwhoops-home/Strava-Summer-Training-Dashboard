@@ -5,7 +5,7 @@
         "title": "First steps",
         "description": "It's a long, long way ahead.",
         "distancerequired": 241402,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/first_steps.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/distance/first_steps.png"
     },
     {
         "id": 1,
@@ -13,7 +13,7 @@
         "title": "Light work",
         "description": "Run 100 5Ks.",
         "distancerequired": 500000,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/light_work.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/distance/light_work.png"
     },
     {
         "id": 2,
@@ -21,7 +21,7 @@
         "title": "Marathon of marathons",
         "description": "Run 26.2 marathons.",
         "distancerequired": 1106300,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/marathon_of_marathons.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/distance/marathon_of_marathons.png"
     },
     {
         "id": 3,
@@ -29,7 +29,7 @@
         "title": "That song",
         "description": "Cause you know I'd walk- ...run a thousand miles",
         "distancerequired": 1609344,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/that_song.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/distance/that_song.png"
     },
     {
         "id": 4,
@@ -37,7 +37,7 @@
         "title": "Brisket calls",
         "description": "Run to Smirk's house for brisket 100 times!",
         "distancerequired": 2574950,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/distance/brisket_calls.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/distance/brisket_calls.png"
     },
     {
         "id": 5,
@@ -94,7 +94,7 @@
         "title": "A hilly journey begins",
         "description": "The hill doesn't ever seem to end...",
         "distancerequired": 1609.34,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/a_hilly_journey.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/elevation/a_hilly_journey.png"
     },
     {
         "id": 101,
@@ -102,7 +102,7 @@
         "title": "600th floor, please",
         "description": "Ascend the height of the Empire State Building 10 times!",
         "distancerequired": 3810,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/600th_floor.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/elevation/600th_floor.png"
     },
     {
         "id": 102,
@@ -110,7 +110,7 @@
         "title": "Surmountable",
         "description": "Climb to the tallest mountain in North America, Mt. Denali.",
         "distancerequired": 6193.54,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/surmountable.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/elevation/surmountable.png"
     },
     {
         "id": 103,
@@ -118,7 +118,7 @@
         "title": "The air's not so thin here",
         "description": "Climb to the top of Mount Everest.",
         "distancerequired": 8848.95,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/airs_not_thin.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/elevation/airs_not_thin.png"
     },
     {
         "id": 104,
@@ -126,7 +126,7 @@
         "title": "Watch the engines",
         "description": "Ascend as high as an airplane flies.",
         "distancerequired": 10972.8,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/watch_the_engines.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/elevation/watch_the_engines.png"
     },
     {
         "id": 105,
@@ -134,7 +134,7 @@
         "title": "SPF 500 required",
         "description": "Enter Earth's ozone layer.",
         "distancerequired": 15240,
-        "imageurl": "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/elevation/SPF_500.png"
+        "imageurl": "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/elevation/SPF_500.png"
     },
     {
         "id": 106,
@@ -156,5 +156,20 @@
         "title": "4 minutes, 27 seconds",
         "description": "How long it took computer scientist Alan Eustace to freefall this distance.",
         "distancerequired": 41418.97
+    },
+    {
+        "id": 200,
+        "type": "moving_time"
+    },
+    {
+        "id": 300,
+        "type": "kudos",
+        "description": "Reach 100 kudos combined.",
+        "kudosrequired": 100
+    },
+    {
+        "id": 400,
+        "type": "general",
+        "description": "Have 10 members log over 100 miles!"
     }
 ]
