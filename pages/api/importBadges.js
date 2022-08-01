@@ -1,7 +1,7 @@
 import clientPromise from "../../lib/mongodb";
-import badges from "./badges.json";
+import badges from "../clubs/badges.json";
 
-export async function ImportBadges(update) {
+async function ImportBadges(update) {
     if (!update) { return; }
     // query DB and club data collection
     const client = await clientPromise;

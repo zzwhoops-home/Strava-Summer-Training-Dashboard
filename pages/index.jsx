@@ -78,7 +78,7 @@ function ViewClubs() {
             <div className='loggedin'>
                 <LoggedIn />
                 <nav>
-                    <Link href={`/users/${id}`} passHref>
+                    <Link href={`/athletes/${id}`} passHref>
                         <a>
                             View your clubs
                         </a>

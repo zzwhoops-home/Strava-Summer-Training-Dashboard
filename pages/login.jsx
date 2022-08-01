@@ -66,7 +66,7 @@ export default function LoginPage(props) {
                 });
                 const athleteId = await getCookie('athleteId');
 
-                await router.push(`/users/${athleteId}`);
+                await router.push(`/athletes/${athleteId}`);
             }
             authorize();
         }, []);

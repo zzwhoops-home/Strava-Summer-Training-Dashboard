@@ -7,7 +7,6 @@ import { GetAccessToken } from '../api/refreshTokens';
 import { GetBadges, GetClubActivities, GetClubStats, UpdateClubData } from '../api/clubData';
 import LoggedIn from '../../components/loggedIn';
 import styles from '../../styles/Clubs.module.css'
-import { ImportBadges } from './importBadges';
 
 export async function getServerSideProps(req, res) {
     const clubId = await parseInt(req.query.id);
@@ -30,8 +29,6 @@ export async function getServerSideProps(req, res) {
     }
     const accessToken = accessRes.valid_access_token;
 
-    // set to true to update DB badges.
-    await ImportBadges(false);
     // call api functions for data
     const clubInfo = await UpdateClubData(clubId, athleteId, accessToken);
     const activities = await GetClubActivities(clubId);
