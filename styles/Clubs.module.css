@@ -58,6 +58,14 @@
     font-size: 2em;
     justify-content: center;
 } */
+.statBorder {
+    display: flex;
+    margin: 0 0 0 0;
+    padding: 0% 1% 0% 1%;
+    background-color: #0e6496;
+    box-shadow: 0px 3px 3px -1px black inset;
+    position: relative;
+}
 .statText {
     display: grid;
     padding: 2% 2% 1.5% 2%;
@@ -68,14 +76,6 @@
     height: 50%;
     width: 35%;
     margin-left: auto;
-}
-.statBorder {
-    display: flex;
-    margin: 0 0 0 0;
-    padding: 0% 1% 0% 1%;
-    background-color: #0e6496;
-    box-shadow: 0px 3px 3px -1px black inset;
-    position: relative;
 }
 .term {
     grid-column: 1;
@@ -162,4 +162,45 @@
     text-align: center;
     width: 100%;
     height: auto;
+}
+.tooltipBadge {
+    position: relative;
+    display: inline-block;
+}
+.tooltipBadge .tooltipInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    
+    visibility: hidden;
+    width: 150px;
+    gap: 10px;
+    background-color: #051723;
+    color: #fff;
+    text-align: center;
+    border-radius: 5%;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -85px;
+
+    /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+.tooltipBadge:hover .tooltipInfo { 
+    visibility: visible;
+    opacity: 1;
+}
+.tooltipInfo__title {
+    font-weight: 700;
+}
+.tooltipInfo__description {
+    font-size: 0.8em;
+}
+.tooltipInfo__requirement {
+    font-size: 0.7em;
 }

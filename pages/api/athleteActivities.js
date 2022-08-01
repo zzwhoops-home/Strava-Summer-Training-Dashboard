@@ -36,15 +36,17 @@ export async function GetAthleteStats(athleteId, acts) {
     
     await SumStats(acts);
 
-    const clubDBFilter = {
-        id: clubId
+    const athleteDBFilter = {
+        id: athleteId
     }
-    const clubDBData = {
+    const athleteDBData = {
         $set: {
             stats: stats
         }
     }   
-    await clubData.updateOne(clubDBFilter, clubDBData, { upsert: true });
+    await athleteActivities.updateOne(athleteDBFilter, athleteDBData, { upsert: true });
+
+    console.table(stats);
 
     return (stats);
 }

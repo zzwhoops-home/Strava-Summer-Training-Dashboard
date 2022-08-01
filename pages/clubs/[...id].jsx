@@ -160,7 +160,7 @@ function Badges({ stats, badges }) {
                             const imageDisplayURL = imageurl ? imageurl : "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
                             const distanceProgress = `${Math.round((distance / distancerequired) * 10000) / 100}%  complete`
                             
-                            return (<div className={`${styles.badge} tooltipBadge`} key={id}>
+                            return (<div className={`${styles.badge} ${styles.tooltipBadge}`} key={id}>
                                 <Image
                                     src={imageDisplayURL}
                                     alt={`${title}`}
@@ -168,11 +168,11 @@ function Badges({ stats, badges }) {
                                     width={256}
                                     height={256}
                                 />
-                                <div className="tooltipInfo">
-                                    <div className="tooltipInfo__title">{title}</div>
-                                    <div className="tooltipInfo__description">{description}</div>
-                                    <div className="tooltipInfo__requirement">{distanceProgress}</div>
-                                    <div className="tooltipInfo__requirement">Goal: {Math.round(distancerequired).toLocaleString()}m</div>
+                                <div className={styles.tooltipInfo}>
+                                    <div className={styles.tooltipInfo__title}>{title}</div>
+                                    <div className={styles.tooltipInfo__description}>{description}</div>
+                                    <div className={styles.tooltipInfo__requirement}>{distanceProgress}</div>
+                                    <div className={styles.tooltipInfo__requirement}>Goal: {Math.round(distancerequired).toLocaleString()}m</div>
                                 </div>
                             </div>);
                         })}
@@ -183,7 +183,7 @@ function Badges({ stats, badges }) {
                             const imageDisplayURL = imageurl ? imageurl : "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
                             const elevationProgress = `${Math.round((elevGain / distancerequired) * 10000) / 100}%  complete`
 
-                            return (<div className={`${styles.badge} tooltipBadge`} key={id}>
+                            return (<div className={`${styles.badge} ${styles.tooltipBadge}`} key={id}>
                                 <Image
                                     src={imageDisplayURL}
                                     alt={`${title}`}
@@ -191,11 +191,11 @@ function Badges({ stats, badges }) {
                                     width={256}
                                     height={256}
                                 />
-                                <div className="tooltipInfo">
-                                    <div className="tooltipInfo__title">{title}</div>
-                                    <div className="tooltipInfo__description">{description}</div>
-                                    <div className="tooltipInfo__requirement">{elevationProgress}</div>
-                                    <div className="tooltipInfo__requirement">Goal: {Math.round(distancerequired).toLocaleString()}m</div>
+                                <div className={styles.tooltipInfo}>
+                                    <div className={styles.tooltipInfo__title}>{title}</div>
+                                    <div className={styles.tooltipInfo__description}>{description}</div>
+                                    <div className={styles.tooltipInfo__requirement}>{elevationProgress}</div>
+                                    <div className={styles.tooltipInfo__requirement}>Goal: {Math.round(distancerequired).toLocaleString()}m</div>
                                 </div>
                             </div>);
                         })}
@@ -218,7 +218,7 @@ export default function Clubs(props) {
 
     return (
         <>
-            <title>Dashboard{clubName}</title>
+            <title>Dashboard</title>
             <div className='loggedin'>
                 <LoggedIn />
                 <nav>
