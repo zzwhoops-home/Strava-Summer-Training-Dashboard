@@ -117,7 +117,12 @@ function AthleteHeader({ athlete }) {
     return (
         <div className={styles.title}>
             <div className={styles.name}>{`${athlete.first_name} ${athlete.last_name}`}</div>
-            <div className={styles.titleImage} style={{backgroundImage: `url(${avatarURL})`}}></div>
+            <div className={styles.titleImage}>
+                <img
+                    src={avatarURL}
+                    referrerpolicy="no-referrer"
+                />
+            </div>
         </div>
     );
 }

@@ -1,19 +1,25 @@
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    color: white;
+    border-radius: 5% 5% 0 0;
+    padding: 2% 1% 2% 1%;
+    background-color: #062f4680;
+    gap: 5%;
+}
 .titleImage {
-    display: block;
     border-radius: 50%;
-    max-width: 240px;
-    max-height: 240px;
     width: 240px;
     height: 240px;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: 0;
-    box-shadow: 0px 0px 5px 3px #166897 inset;
+    box-shadow: 0px 0px 5px 3px #166897;
+    z-index: 1;
 }
-.titleImageContainer {
-    position: relative;
-    height: auto;
-    margin-left: 5%;
+.titleImage img {
+    border-radius: 50%;
+    width: 100%;
+    z-index: 0;
 }
 .clubName {
     display: flex;
@@ -34,17 +40,6 @@
     background-size: 100%;
     background-repeat: no-repeat;
     border-radius: 5% 5% 0 0;
-}
-.title {
-    display: flex;
-    align-items: center;
-    position: relative;
-    height: 10%;
-    color: white;
-    border-radius: 5% 5% 0 0;
-    padding: 2% 1% 2% 1%;
-    background-color: #062f4680;
-    gap: 5%;
 }
 /* .subtitle {
     display: flex;

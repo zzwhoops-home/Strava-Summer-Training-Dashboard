@@ -49,15 +49,15 @@ export async function getServerSideProps(req, res) {
 }
 
 function ListActivities({ activities }) {
-    console.table(activities);
-    const activitiesOnly = activities.map((activity=value) => activity.activities).flat().sort((a, b) => (a.distance < b.distance) ? 1 : -1);
+    // const activitiesOnly = activities.map((activity=value) => activity.activities).flat().sort((a, b) => (a.distance < b.distance) ? 1 : -1);
+    const activitiesOnly = activities.map((activity=value) => activity.activities).flat();
     // console.log(activitiesOnly)
     
     return (
         <>
             <ol style={{listStyleType: "none"}}>
                 {activitiesOnly.map((activity=value, index=index) => (
-                    <li index={activity.activityId}>{`(${index}) ${activity.athleteId} ${activity.name}: ${activity.distance}m ${activity.kudos} kudos -- ${Math.round((activity.activityPerformance ? activity.activityPerformance.totalPP : 0) * 100) / 100}PP`}</li>
+                    <li index={activity.activityId}>{`(${index}) ${activity.athleteId} ${activity.name}: ${activity.distance}m ${activity.kudos} kudos`}</li>
                 ))}
             </ol>
         </>
@@ -131,8 +131,11 @@ function ClubHeader({ clubInfo }) {
         <>
             <div className={styles.titleBackground} style={{backgroundImage: `url(${titleBackgroundURL})`}}>
                 <div className={styles.title}>
-                    <div className={styles.titleImageContainer}>
-                        <span className={styles.titleImage} style={{backgroundImage: `url(${titleImageURL})`}}></span>
+                    <div className={styles.titleImage}>
+                        <img
+                            src={titleImageURL}
+                            referrerPolicy="no-referrer"
+                        />
                     </div>
                     <div className={styles.clubName}>{`${clubInfo.name}`}</div>
                 </div>
@@ -157,7 +160,7 @@ function Badges({ stats, badges }) {
                         {/* REMEMBER to replace key with badge id */}
                         {distanceBadges.map((badge=value) => {
                             const { id, title, description, distancerequired, imageurl } = badge;
-                            const imageDisplayURL = imageurl ? imageurl : "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
+                            const imageDisplayURL = imageurl ? imageurl : "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
                             const distanceProgress = `${Math.round((distance / distancerequired) * 10000) / 100}%  complete`
                             
                             return (<div className={`${styles.badge} ${styles.tooltipBadge}`} key={id}>
@@ -180,7 +183,7 @@ function Badges({ stats, badges }) {
                     <div className={styles.elevationBadgeGroup}>
                         {elevationBadges.map((badge=value, index=index) => {
                             const { id, title, description, distancerequired, imageurl } = badge;
-                            const imageDisplayURL = imageurl ? imageurl : "https://genartiv.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
+                            const imageDisplayURL = imageurl ? imageurl : "https://stravadashboard.sirv.com/strava_summer_training_dashboard/badges/badge_placeholder.png";
                             const elevationProgress = `${Math.round((elevGain / distancerequired) * 10000) / 100}%  complete`
 
                             return (<div className={`${styles.badge} ${styles.tooltipBadge}`} key={id}>
@@ -210,6 +213,7 @@ export default function Clubs(props) {
     if (props.errorCode) {
         return (<ClubNotFound />);
     }
+    
     const [clubName, setClubName] = useState("");
 
     useEffect(() => {
@@ -218,7 +222,7 @@ export default function Clubs(props) {
 
     return (
         <>
-            <title>Dashboard</title>
+            <title>Dashboard {clubName}</title>
             <div className='loggedin'>
                 <LoggedIn />
                 <nav>
