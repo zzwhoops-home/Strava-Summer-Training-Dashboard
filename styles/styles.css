@@ -27,7 +27,11 @@ html {
     text-align: center;
     justify-content: space-between;
     align-items: flex-end;
-    gap: 0 1%;
+}
+nav {
+    display: flex;
+    gap: 10%;
+    width: 250px;
 }
 a:link {
     color: rgb(255, 130, 130);

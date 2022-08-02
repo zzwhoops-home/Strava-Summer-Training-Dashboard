@@ -53,6 +53,8 @@ export async function GetAthleteStats(athleteId, acts) {
 // activity = {
 //     athleteId: athleteId
 //     activityId: id,
+//     type: type,
+//     workout_type: workout_type,
 //     name: name,
 //     distance: distance,
 //     movingTime: moving_time,
@@ -108,12 +110,16 @@ export async function UpdateActivities(athleteId, accessToken) {
                 break;
             }
         }
+        // flatten array into one long list, filter out all non-running activities
         responses = await responses.flat();
+        responses = await responses.filter(item => item.type == "Run");
 
         let formattedActivities = await responses.map((activity=value) => (
             {
                 athleteId: athleteId,
                 activityId: activity.id,
+                type: activity.type,
+                workout_type: activity.workout_type,
                 name: activity.name,
                 distance: activity.distance,
                 movingTime: activity.moving_time,
@@ -216,12 +222,18 @@ export async function MultiUpdateActivities(athleteIds) {
                     break;
                 }
             }
+            // flatten array into one long list, filter out all non-running activities
             responses = await responses.flat();
+            console.time("yes");
+            responses = await responses.filter(item => item.type == "Run");
+            console.timeEnd("yes");
 
             let formattedActivities = await responses.map((activity=value) => (
                 {
                     athleteId: athleteId,
                     activityId: activity.id,
+                    type: activity.type,
+                    workout_type: activity.workout_type,
                     name: activity.name,
                     distance: activity.distance,
                     movingTime: activity.moving_time,

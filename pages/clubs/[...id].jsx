@@ -211,6 +211,12 @@ export default function Clubs(props) {
         return (<ClubNotFound />);
     }
     
+    const [id, setId] = useState();
+
+    useEffect(() => {
+        setId(getCookie('athleteId'));
+    }, []);
+
     const [clubName, setClubName] = useState("");
 
     useEffect(() => {
@@ -225,6 +231,9 @@ export default function Clubs(props) {
                 <nav>
                     <Link href="/">
                         <a>Back to home</a>
+                    </Link>
+                    <Link href={`/athletes/${id}`}>
+                        <a>User Profile</a>
                     </Link>
                 </nav>
             </div>
