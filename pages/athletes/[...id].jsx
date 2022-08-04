@@ -12,6 +12,7 @@ import styles from '../../styles/Athletes.module.css'
 import { PerformanceCalculation } from '../api/calculatePP';
 import { GetAthleteStats, UpdateActivities } from '../api/athleteActivities';
 import { GetAccessToken } from '../api/refreshTokens';
+import AthleteTable from '../../components/performanceTable/tables';
 
 export async function getServerSideProps(req, res) {
     const loggedInAthleteId = await parseInt(req.req.cookies.athleteId);
@@ -92,11 +93,11 @@ function ListClubs({ clubs, isAthlete }) {
     } else {
         return (
             <>
-                <div className={styles.clubList}>
-                    <div className={styles.clubSubtitle}>
+                <div className={styles.clubs}>
+                    <div className={styles.clubsTitle}>
                         Athlete Clubs
                     </div>
-                    <div className={styles.clubs}>
+                    <div className={styles.clubsList}>
                         <ol style={{listStyleType: "none"}}>
                             {clubs.map((club=value) => (
                                 <li key={club.id}>
@@ -178,8 +179,6 @@ function AthleteStats({ stats }) {
                 <dd className={styles.description}>{kudos}</dd>
                 <dt className={styles.term}>PRs</dt>
                 <dd className={styles.description}>{prs}</dd>
-                <dt className={styles.term}>Badges</dt>
-                <dd className={styles.description}>?/69</dd>
             </dl>
         </>
     )
@@ -200,6 +199,14 @@ function AthleteOverview({ stats, performance }) {
                 </div>
             </div>
             <AthleteStats stats={stats}/>
+        </div>
+    );
+}
+
+function TopPerformances ({ activities }) {
+    return (
+        <div className={styles.performanceTable}>
+            {/* <AthleteTable /> */}
         </div>
     );
 }
@@ -229,6 +236,7 @@ export default function Athletes(props) {
                 <AthleteHeader athlete={props.athlete} />
                 <AthleteOverview stats={props.stats} performance={props.performance} />
                 <ListClubs clubs={props.clubs} isAthlete={props.isAthlete} />
+                <TopPerformances />
             </div>
         </>
     );

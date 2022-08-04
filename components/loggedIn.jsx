@@ -1,6 +1,5 @@
 import { getCookie } from 'cookies-next';
 import { useState, useEffect } from 'react';
-import styles from '../styles/LoggedIn.module.css'
 
 export default function LoggedIn() {
     const [id, setId] = useState();
