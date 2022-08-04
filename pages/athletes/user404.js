@@ -1,3 +1,8 @@
 export default function UserNotFound() {
-    return <h1>404 - An athlete with this ID was not found!</h1>
+    return (
+        <>
+            <h1>404 - Oops, dropped the baton!</h1>
+            <p>At least you're not disqualified. Try logging in again.</p>
+        </>
+    );
 }
