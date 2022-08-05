@@ -1,16 +1,27 @@
 import Link from 'next/link';
-import Image from "next/image";
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 import ClubNotFound from './club404';
 import { useState, useEffect } from 'react';
 import { getCookie } from 'cookies-next';
 import { GetAccessToken } from '../api/refreshTokens';
-import { GetBadges, GetClubActivities, GetClubStats, UpdateClubData } from '../api/clubData';
+import { GetBadges, GetClubActivities, GetClubStats, IsClubMember, UpdateClubData } from '../api/clubData';
 import LoggedIn from '../../components/loggedIn';
 import styles from '../../styles/Clubs.module.css'
 
 export async function getServerSideProps(req, res) {
     const clubId = await parseInt(req.query.id);
     const athleteId = await parseInt(req.req.cookies.athleteId);
+    
+    // check athlete is even part of the club
+    const isClubMember = await IsClubMember(clubId, athleteId);
+    if (!isClubMember) {
+        return ({
+            props: {
+                errorCode: 404
+            }
+        })
+    }
 
     // const clubDBData = {
     //     clubId: clubId,
@@ -212,14 +223,10 @@ export default function Clubs(props) {
     }
     
     const [id, setId] = useState();
-
-    useEffect(() => {
-        setId(getCookie('athleteId'));
-    }, []);
-
     const [clubName, setClubName] = useState("");
 
     useEffect(() => {
+        setId(getCookie('athleteId'));
         setClubName(` - ${props.clubInfo.name}`);
     }, []);
 

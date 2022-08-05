@@ -1,7 +1,23 @@
 import clientPromise from "../../lib/mongodb";
 import { UpdateActivities, MultiUpdateActivities } from "./athleteActivities";
 
-export async function CalculateData() {
+export async function IsClubMember(clubId, athleteId) {
+    // query DB and athlete club collection
+    const client = await clientPromise;
+    const db = client.db(process.env.DB);
+    const athleteClubs = db.collection("athlete_clubs");
+
+    
+    // make sure the athlete is part of the club before updating its data
+    const clubQueryOptions = {
+        projection: {
+            "_id": 0,
+            "clubs.id": 1
+        }
+    }
+    const clubIdsQuery = await athleteClubs.findOne({ id: athleteId }, clubQueryOptions);
+    const clubIds = await clubIdsQuery.clubs.map((id=value) => id.id);
+    return clubIds.includes(clubId) ? true : false;
 }
 export async function GetClubStats(clubId, acts) {
     // query DB and club data collection
@@ -111,14 +127,16 @@ export async function UpdateClubData(clubId, athleteId, accessToken) {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const clubData = db.collection("club_data");
+    const athleteClubs = db.collection("athlete_clubs");
 
     // try finding existing club data
     const existing = await clubData.findOne({ id: clubId });
     // get current epoch timestamp
     const curTime = Math.floor(Date.now() / 1000);
-
+    
     // update if club doesn't exist or two days have elapsed since last update
     if (!existing || ((existing.lastUpdated + 172800) < curTime)) {
+            
         // get club name if club data does not exist yet
         const clubURL = `https://www.strava.com/api/v3/clubs/${clubId}?access_token=${accessToken}`;
         const clubResponse = await fetch(clubURL);
