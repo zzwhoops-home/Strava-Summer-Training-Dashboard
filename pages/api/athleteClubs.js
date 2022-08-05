@@ -24,11 +24,29 @@ export async function GetClubs(athleteId) {
     const curTime = Math.floor(Date.now() / 1000);
 
     // update if existing or two days have elapsed since last update
-    if (!existing || ((existing.lastUpdated + 172800) < curTime)) {
+    if (!existing || ((existing.lastUpdated + 1) < curTime)) {
         // get required data from Strava
         const clubsURL = `https://www.strava.com/api/v3/athlete/clubs?access_token=${accessToken}`;
         const clubsResponse = await fetch(clubsURL);
         const clubsResponseJSON = await clubsResponse.json();
+
+        const formattedClubs = await clubsResponseJSON.map((club=value) => (
+            {
+                id: club.id,
+                name: club.name,
+                profile: club.profile,
+                cover_photo: club.cover_photo,
+                activity_types: club.activity_types,
+                city: club.city,
+                state: club.state,
+                country: club.country,
+                private: club.private,
+                member_count: club.member_count,
+                featured: club.featured,
+                verified: club.verified,
+                url: club.url
+            }
+        ));
         
         // update DB with new clubs, if user doesn't exist create a new entry.
         const clubsDBFilter = {
@@ -38,7 +56,7 @@ export async function GetClubs(athleteId) {
             $set: {
                 id: athleteId,
                 lastUpdated: curTime,
-                clubs: clubsResponseJSON
+                clubs: formattedClubs
             }
         }
         await athleteClubs.findOneAndUpdate(clubsDBFilter, clubsDBData, { upsert: true });
