@@ -155,8 +155,10 @@ function ClubHeader({ clubInfo }) {
 function Badges({ stats, badges }) {
     const { distance, elevGain } = stats;
 
-    const distanceBadges = badges.filter((badge=value) => badge.type=="distance");
-    const elevationBadges = badges.filter((badge=value) => badge.type=="elevation");
+    // filter out the badges of each type and sort them by distance required to be displayed
+    const distanceBadges = badges.filter((badge=value) => badge.type=="distance").sort((a, b) => (a.distancerequired > b.distancerequired) ? 1 : -1);
+    const elevationBadges = badges.filter((badge=value) => badge.type=="elevation").sort((a, b) => (a.distancerequired > b.distancerequired) ? 1 : -1);
+
     return (
         <>
             <div className={styles.badges}>
