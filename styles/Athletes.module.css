@@ -93,8 +93,16 @@
         transform: scale(100%);
     }
 }
+@keyframes fadeIn {
+    0% {
+        opacity: 0%;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
 .performance .score {
-    animation: 1s cubic-bezier(0.42, 0, 0.28, 2) 0s 1 popIn;
+    animation: 0.7s cubic-bezier(0.42, 0, 0.28, 1.4) 0s 1 popIn;
     font-size: 3.5em;
     font-family: 'Skranji', cursive;
     text-align: right;
@@ -102,6 +110,7 @@
     color: #FCE694;
 }
 .performance .label {
+    animation: 0.7s 0s 1 fadeIn;
     display: block;
     position: relative;
     font-size: 2em;
