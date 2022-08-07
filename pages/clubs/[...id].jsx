@@ -185,8 +185,8 @@ function Badges({ stats, badges }) {
                                     <div className={styles.tooltipInfo__title}>{title}</div>
                                     <div className={styles.tooltipInfo__description}>{description}</div>
                                     <div className={styles.tooltipInfo__requirement}>{distanceProgress}</div>
-                                    <div className={styles.tooltipInfo__requirement}>Goal: {Math.round(distancerequired).toLocaleString()}m</div>
                                 </div>
+                                <div className={styles.tooltipRequirement}>{Math.round(distancerequired / 1000).toLocaleString()}km</div>
                             </div>);
                         })}
                     </div>
@@ -208,8 +208,8 @@ function Badges({ stats, badges }) {
                                     <div className={styles.tooltipInfo__title}>{title}</div>
                                     <div className={styles.tooltipInfo__description}>{description}</div>
                                     <div className={styles.tooltipInfo__requirement}>{elevationProgress}</div>
-                                    <div className={styles.tooltipInfo__requirement}>Goal: {Math.round(distancerequired).toLocaleString()}m</div>
                                 </div>
+                                <div className={styles.tooltipRequirement}>{Math.round(distancerequired).toLocaleString()}m</div>
                             </div>);
                         })}
                     </div>

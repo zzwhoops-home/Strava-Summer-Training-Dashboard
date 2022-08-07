@@ -104,13 +104,12 @@
 }
 .badgeGroup {
     display: grid;
+    position: relative;
     grid-auto-flow: row;
     grid-template-columns: 1fr 1fr;
     gap: 25px 40px;
     padding: 3%;
     background-color: #125883;
-    position: relative;
-    align-items: center;
 }
 .badgeGroupLabel {
     display: flex;
@@ -127,9 +126,7 @@
     grid-template-columns: repeat(4, 90px);
     gap: 8px 20px;
     position: relative;
-    align-items: center;
     justify-content: center;
-    align-content: center;
 }
 .elevationBadgeGroup {
     display: grid;
@@ -137,9 +134,7 @@
     grid-template-columns: repeat(4, 90px);
     gap: 8px 20px;
     position: relative;
-    align-items: center;
     justify-content: center;
-    align-content: center;
 }
 @keyframes fadeIn {
     0% {
@@ -156,11 +151,10 @@
     color: white;
     text-align: center;
     width: 100%;
-    height: auto;
+    height: 96px;
 }
 .tooltipBadge {
     position: relative;
-    display: inline-block;
 }
 .tooltipBadge .tooltipInfo {
     display: flex;
@@ -186,7 +180,20 @@
     opacity: 0;
     transition: opacity 0.5s;
 }
-.tooltipBadge:hover .tooltipInfo { 
+.tooltipBadge .tooltipRequirement {
+    position: relative;
+    bottom: 55px;
+
+    background-color: #062f4680;
+    margin-left: 20%;
+    margin-right: 20%;
+    
+    font-size: 0.7em;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+.tooltipBadge:hover .tooltipInfo, .tooltipBadge:hover .tooltipRequirement { 
     visibility: visible;
     opacity: 1;
 }
