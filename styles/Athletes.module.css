@@ -7,6 +7,17 @@
     background-color: #084d74;
     gap: 5%;
 }
+/* Headings for each section */
+.sectionHeader {
+    display: flex;
+    font-weight: 700;
+    font-size: 1.5em;
+    height: 50px;
+    align-items: center;
+    border-bottom: 2px solid #31b0ff;
+    margin: 0 4% 2%;
+    padding: 2% 0.5% 0.5% 0.5%;
+}
 .titleImage {
     border-radius: 50%;
     width: 200px;
@@ -37,16 +48,6 @@
     flex-direction: column;
     background-color: #0d4263;
     margin-top: 2%;
-}
-.clubsTitle {
-    display: flex;
-    font-weight: 700;
-    font-size: 1.5em;
-    height: 50px;
-    align-items: center;
-    border-bottom: 2px solid #31b0ff;
-    margin: 0 4% 2%;
-    padding: 2% 0.5% 0.5% 0.5%;
 }
 .clubsList {
     display: flex;
@@ -164,8 +165,10 @@
     line-height: 1.5;
     /* margin-inline-end: 10%; */
 }
-.performanceTable {
+.topPerformances {
     margin-top: 2%;
-    height: 200px;
     background-color: #0d4263;
+}
+.performanceTable {
+    padding: 0% 2% 2%;
 }

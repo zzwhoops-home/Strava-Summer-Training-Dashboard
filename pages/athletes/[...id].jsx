@@ -74,7 +74,7 @@ function ListClubs({ clubs, isAthlete }) {
         return (
             <>
                 <div className={styles.clubs}>
-                    <div className={styles.clubsTitle}>
+                    <div className={styles.sectionHeader}>
                         Athlete Clubs
                     </div>
                     <div className={styles.clubsList}>
@@ -205,8 +205,11 @@ function AthleteOverview({ stats, performance }) {
 
 function TopPerformances ({ activities }) {
     return (
-        <div className={styles.performanceTable}>
-            {/* <AthleteTable /> */}
+        <div className={styles.topPerformances}>
+            <div className={styles.sectionHeader}>Top Performances</div>
+            <div className={styles.performanceTable}>
+                <AthleteTable activities={activities} />
+            </div>
         </div>
     );
 }
@@ -236,7 +239,7 @@ export default function Athletes(props) {
                 <AthleteHeader athlete={props.athlete} />
                 <AthleteOverview stats={props.stats} performance={props.performance} />
                 <ListClubs clubs={props.clubs} isAthlete={props.isAthlete} />
-                <TopPerformances />
+                <TopPerformances activities={props.activities} />
             </div>
         </>
     );

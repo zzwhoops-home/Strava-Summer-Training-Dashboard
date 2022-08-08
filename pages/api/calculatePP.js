@@ -74,7 +74,7 @@ export async function PerformanceCalculation(athleteId, accessToken) {
     await activities.forEach(CalculatePP);
     await athleteActivities.bulkWrite(updates);
 
-    // calculate performances using weighting, decreasing by 0.95^run index each time
+    // calculate performances using weighting, decreasing by 0.95^run index each time to encourage better runs
     await performances.sort((a, b) => (a < b) ? 1 : -1);
     const formattedPerformances = await performances.slice(0, 25);
 
