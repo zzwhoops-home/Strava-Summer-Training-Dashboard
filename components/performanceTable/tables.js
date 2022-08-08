@@ -7,7 +7,6 @@ export default function AthleteTable({ activities }) {
 
     const formattedActivities = activities.map((activity=value) => {
         const performance = activity.activityPerformance;
-        console.log(performance);
         return ({
             activityId: activity.activityId,
             date: activity.startDateLocal,

@@ -7,6 +7,7 @@ body {
 html {
     background: #002234;
     z-index: -1;
+    scroll-behavior: smooth;
 }
 h1 {
     color: white;

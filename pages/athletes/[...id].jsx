@@ -73,7 +73,7 @@ function ListClubs({ clubs, isAthlete }) {
     if (isAthlete) {
         return (
             <>
-                <div className={styles.clubs}>
+                <div className={styles.clubs} id="clubs">
                     <div className={styles.sectionHeader}>
                         Athlete Clubs
                     </div>
@@ -187,7 +187,7 @@ function AthleteOverview({ stats, performance }) {
     const description = "A formula which calculates a special score is a common feature in many rhythm games to determine how 'skillful' a performance is. Of course, giving a run a 'performance score' is difficult. It's impossible to factor in everything, from weather to the shoe you use. So, this feature is purely for fun, and only gives a rough estimate of how impressive a run is. It will be used for other purposes, like dealing damage to a running boss ;)";
 
     return (
-        <div className={styles.overview}>
+        <div className={styles.overview} id="stats">
             <div className={styles.athletePerformance}>
                 <div className={styles.performance}>
                     <div className={styles.score}>{performance}</div>
@@ -205,7 +205,7 @@ function AthleteOverview({ stats, performance }) {
 
 function TopPerformances ({ activities }) {
     return (
-        <div className={styles.topPerformances}>
+        <div className={styles.topPerformances} id="performances">
             <div className={styles.sectionHeader}>Top Performances</div>
             <div className={styles.performanceTable}>
                 <AthleteTable activities={activities} />
@@ -236,6 +236,8 @@ export default function Athletes(props) {
                 </nav>
             </div>
             <div className='content'>
+                {/* For future anchor navigation */}
+                {/* <a href="#performances">Hi there</a> */}
                 <AthleteHeader athlete={props.athlete} />
                 <AthleteOverview stats={props.stats} performance={props.performance} />
                 <ListClubs clubs={props.clubs} isAthlete={props.isAthlete} />
