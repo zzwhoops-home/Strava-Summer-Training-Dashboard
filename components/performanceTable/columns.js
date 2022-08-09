@@ -1,7 +1,8 @@
 export const athleteColumns = [
     {
         Header: 'Date',
-        accessor: 'date'
+        accessor: 'date',
+        width: '200px'
     },
     {
         Header: 'Title',
@@ -9,23 +10,22 @@ export const athleteColumns = [
     },
     {
         Header: 'Distance',
-        accessor: 'distance'
+        accessor: 'distance',
+        width: '100px'
     },
     {
         Header: 'Elevation Gain',
-        accessor: 'elevGain'
-    },
-    // moving to elapsed time ratio
-    {
-        Header: 'Time Ratio',
-        accessor: 'timeRatio'
+        accessor: 'elevGain',
+        width: '100px'
     },
     {
         Header: 'Kudos',
-        accessor: 'kudos'
+        accessor: 'kudos',
+        width: '25px'
     },
     {
         Header: 'Performance',
-        accessor: 'performance'
+        accessor: 'performance',
+        width: '100px'
     }
 ]

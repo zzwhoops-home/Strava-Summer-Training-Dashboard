@@ -208,7 +208,9 @@ function TopPerformances ({ activities }) {
         <div className={styles.topPerformances} id="performances">
             <div className={styles.sectionHeader}>Top Performances</div>
             <div className={styles.performanceTable}>
-                <AthleteTable activities={activities} />
+                <div className={styles.performanceTable__shadow}>
+                    <AthleteTable activities={activities} />
+                </div>
             </div>
         </div>
     );
