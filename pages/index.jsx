@@ -13,20 +13,14 @@ function ListItem(props) {
     return <li>{props.value}</li>
 }
 
-function Steps({ toDisplay }) {
-    let steps = ["Register for a Strava account", "Join the Princeton XC/TF Summer Training Club", "Login with your Strava account here", "View your club on this website!"]
-    steps = steps.slice(0, toDisplay);
-    
+function Steps() {
     return (
         <>
             <Header title="Welcome!" />
             <ul style={{listStyleType: "none"}}>
-                {steps.map((step=value, index=index) => (
-                    <>
-                        <ListItem key={index} value={`(${index + 1}). ${step}`} />
-                        {/*<li key={index * 2}>{`${index + 1 * 2} Hi lol`}</li>*/}
-                    </>
-                ))}
+                <li>(1). Register for a Strava account</li>
+                <li>(2). Join any Strava club</li>
+                <li>(3). Login to this application by clicking the "Connect with Strava" button below</li>
             </ul>
         </>
     )
@@ -97,8 +91,7 @@ export default function HomePage() {
             <div className='content'>
                 <Header title="Strava Summer Dashboard" italic={true} />
                 <Information />
-                <Steps toDisplay={4} />
-                <Purpose />
+                <Steps />
                 <Disclaimer />
                 <Link href={`https://www.strava.com/oauth/authorize?client_id=74853&response_type=code&redirect_uri=${serverURL}/login/&scope=activity:read_all`} passHref>
                     <a>
