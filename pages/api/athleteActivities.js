@@ -224,9 +224,7 @@ export async function MultiUpdateActivities(athleteIds) {
             }
             // flatten array into one long list, filter out all non-running activities
             responses = await responses.flat();
-            console.time("yes");
             responses = await responses.filter(item => item.type == "Run");
-            console.timeEnd("yes");
 
             let formattedActivities = await responses.map((activity=value) => (
                 {

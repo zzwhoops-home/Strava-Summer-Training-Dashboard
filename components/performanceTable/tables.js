@@ -13,15 +13,16 @@ export default function AthleteTable({ activities }) {
             date: activity.startDateLocal,
             utcOffset: activity.utcOffset,
             title: activity.name,
-            distance: Math.round(activity.distance * 0.0006214),
-            elevGain: Math.round(activity.elevGain),
-            timeRatio: Math.round(performance.MERatio * 1000) / 1000,
+            distance: activity.distance,
+            elevGain: activity.elevGain,
+            timeRatio: performance.MERatio,
             kudos: activity.kudos,
-            performance: Math.round(performance.totalPP * 100) / 100
+            performance: performance.totalPP
         });
     });
-    formattedActivities.sort((a, b) => a.performance < b.performance ? 1 : -1);
-    const memorizedActivities = useMemo(() => formattedActivities, []);
+    const sortedActivities = (formattedActivities.sort((a, b) => a.performance < b.performance ? 1 : -1)).slice(0, 33);
+    
+    const memorizedActivities = useMemo(() => sortedActivities, [formattedActivities]);
 
     const defaultColumn = {
         width: "auto"

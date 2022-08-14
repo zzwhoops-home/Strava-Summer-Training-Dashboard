@@ -221,9 +221,11 @@ export default function Athletes(props) {
         return (<UserNotFound />);
     }
     const [name, setName] = useState("");
+    const [activities, setActivities] = useState();
 
     useEffect(() => {
         setName(` - ${props.athlete.first_name} ${props.athlete.last_name}`);
+        setActivities(props.activities);
     }, []);
 
     return (
