@@ -37,14 +37,14 @@ nav {
     width: 250px;
 }
 a:link {
-    color: rgb(255, 130, 130);
+    color: #fce694;
 }
 a:visited {
-    color: #ffc37a;
+    color: #fce694;
 }
 a:hover {
-    color: white;
+    color: #24ccff;
 }
 a:active {
-    color: aquamarine;
+    color: #3fff39;
 }
