@@ -184,6 +184,7 @@
     background-color: #1770a7;
 }
 .performanceCell {
+    height: 50px;
     border-bottom: 1px solid #6cc0f1;
     padding: 1%;
 }

@@ -1,0 +1,14 @@
+.dateColumn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.date {
+    font-size: 1.1em;
+    width: 45%;
+}
+.timeAgo {
+    font-size: 0.8em;
+    font-style: italic;
+    width: 50%;
+}
