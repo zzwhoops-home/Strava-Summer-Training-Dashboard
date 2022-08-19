@@ -184,12 +184,15 @@
     background-color: #1770a7;
 }
 .performanceCell {
-    height: 50px;
+    height: 40px;
     border-bottom: 1px solid #6cc0f1;
-    padding: 1%;
+    padding: 0.5%;
 }
 .performanceHeaderCell {
-    border-bottom: 5px solid #fffdc8;
+    padding: 8px 0px 5px 5px;
+    text-align: left;
+    border-bottom: 3px solid #fffdc8;
+    font-size: 1.2em;
 }
 .performanceBorder {
     border-collapse: collapse;
