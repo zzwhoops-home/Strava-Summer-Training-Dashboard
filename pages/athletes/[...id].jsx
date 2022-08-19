@@ -13,6 +13,7 @@ import { PerformanceCalculation } from '../api/calculatePP';
 import { GetAthleteStats, UpdateActivities } from '../api/athleteActivities';
 import { GetAccessToken } from '../api/refreshTokens';
 import AthleteTable from '../../components/performanceTable/tables';
+import LoadingScreen from '../../components/loadingScreen';
 
 export async function getServerSideProps(req, res) {
     const loggedInAthleteId = await parseInt(req.req.cookies.athleteId);
@@ -121,7 +122,7 @@ function AthleteHeader({ athlete }) {
             <div className={styles.titleImage}>
                 <img
                     src={avatarURL}
-                    referrerpolicy="no-referrer"
+                    referrerPolicy="no-referrer"
                 />
             </div>
         </div>
@@ -220,17 +221,29 @@ export default function Athletes(props) {
     if (props.errorCode) {
         return (<UserNotFound />);
     }
+    const [dataLoading, setLoading] = useState(true);
     const [name, setName] = useState("");
     const [activities, setActivities] = useState();
 
     useEffect(() => {
-        setName(` - ${props.athlete.first_name} ${props.athlete.last_name}`);
-        setActivities(props.activities);
+        setTimeout(() => {
+            setName(` - ${props.athlete.first_name} ${props.athlete.last_name}`);
+            setActivities(props.activities);
+            if (props) {
+                setLoading(false);
+            }
+        }, 1000)
     }, []);
+
+    if (dataLoading) {
+        return (
+            <LoadingScreen />
+        )
+    }
 
     return (
         <>
-            <title>Athlete</title>
+            <title>Athlete{name}</title>
             <div className='loggedin'>
                 <LoggedIn />
                 <nav>
@@ -245,7 +258,7 @@ export default function Athletes(props) {
                 <AthleteHeader athlete={props.athlete} />
                 <AthleteOverview stats={props.stats} performance={props.performance} />
                 <ListClubs clubs={props.clubs} isAthlete={props.isAthlete} />
-                <TopPerformances activities={props.activities} />
+                <TopPerformances activities={activities} />
             </div>
         </>
     );
