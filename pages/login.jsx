@@ -3,6 +3,7 @@ import { requiredScopes } from "../config";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { getCookie } from 'cookies-next';
+import LoadingScreen from '../components/loadingScreen';
 
 export async function getServerSideProps(ctx) {
     // get url params
@@ -41,10 +42,6 @@ function Error({ response }) {
     );
 }
 
-function LoggedIn({ props }) {
-    return (<h1 style={{color: "white"}}>One moment, fetching your data...</h1>)
-}
-
 export default function LoginPage(props) {
     const router = useRouter();
 
@@ -72,7 +69,7 @@ export default function LoginPage(props) {
         }, []);
 
         return (
-            <LoggedIn />
+            <LoadingScreen />
         );
     }
 }
