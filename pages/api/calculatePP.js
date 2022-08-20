@@ -70,7 +70,8 @@ export async function PerformanceCalculation(athleteId, accessToken) {
         updates.push(update);
     }
 
-    const activities = await UpdateActivities(athleteId, accessToken);
+    const athlete = await athleteActivities.findOne({ id: athleteId });
+    const activities = athlete.activities;
     await activities.forEach(CalculatePP);
     await athleteActivities.bulkWrite(updates);
 
@@ -85,9 +86,15 @@ export async function PerformanceCalculation(athleteId, accessToken) {
         weightedPerformance += curValue;
     }
 
-    const athletePerformance = await Math.round(weightedPerformance).toLocaleString();
-
-    return athletePerformance;
+    const performanceFilter = {
+        "id": athleteId
+    }
+    const performanceData = {
+        $set: {
+            performance: weightedPerformance
+        }
+    }
+    await athleteActivities.updateOne(performanceFilter, performanceData);
 
     // // in case if we want to remove activity performance for reworks, recalculating, activity model changes, etc...
     // const removeFilter = {

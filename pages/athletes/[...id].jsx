@@ -3,13 +3,11 @@ import Link from 'next/link';
 import Image from "next/image";
 import { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
-import { useRouter } from 'next/router';
 import { serverURL } from '../../config';
 import UserNotFound from './user404';
 import LoggedIn from '../../components/loggedIn';
 import { GetClubs } from '../api/athleteClubs';
 import styles from '../../styles/Athletes.module.css'
-import { PerformanceCalculation } from '../api/calculatePP';
 import { GetAthleteStats, UpdateActivities } from '../api/athleteActivities';
 import { GetAccessToken } from '../api/refreshTokens';
 import AthleteTable from '../../components/performanceTable/tables';
@@ -21,6 +19,7 @@ export async function getServerSideProps(req, res) {
     const client = await clientPromise;
     const db = client.db(process.env.DB);
     const athleteInfo = db.collection("athlete_info");
+    const athleteActivities = db.collection("athlete_activities");
 
     // GET valid access token from API endpoint
     const accessRes = await GetAccessToken(athleteId);
@@ -34,8 +33,6 @@ export async function getServerSideProps(req, res) {
     const accessToken = accessRes.valid_access_token;
     
     const clubs = await GetClubs(athleteId);
-    const activities = await UpdateActivities(athleteId, accessToken);
-    const activitiesJSON = await JSON.parse(JSON.stringify(activities));
 
     if (clubs.errorCode) {
         return ({
@@ -45,19 +42,25 @@ export async function getServerSideProps(req, res) {
         });
     }
     
+    // update user activities
+    await UpdateActivities(athleteId, accessToken);
+
     // get athlete information
     const athlete = await athleteInfo.findOne({ id: athleteId });
     const athleteJSON = await JSON.parse(JSON.stringify(athlete));
 
+    const athleteData = await athleteActivities.findOne({ id: athleteId });
+    const activities = athleteData.activities;
+    const performance = athleteData.performance;
+
     const isAthlete = loggedInAthleteId == athleteId ? true : false;
-    const stats = await GetAthleteStats(athleteId, activitiesJSON)
-    const performance = await PerformanceCalculation(athleteId, accessToken);
+    const stats = await GetAthleteStats(athleteId, activities);
 
     return ({
         props: {
             athlete: athleteJSON,
             clubs: clubs,
-            activities: activitiesJSON,
+            activities: activities,
             stats: stats,
             performance: performance,
             isAthlete: isAthlete
@@ -191,7 +194,7 @@ function AthleteOverview({ stats, performance }) {
         <div className={styles.overview} id="stats">
             <div className={styles.athletePerformance}>
                 <div className={styles.performance}>
-                    <div className={styles.score}>{performance}</div>
+                    <div className={styles.score}>{Math.round(performance).toLocaleString()}</div>
                     <div className={styles.label}>Performance Score</div>
                 </div>
                 <div className={`${styles.info} ${styles.tooltip}`}>

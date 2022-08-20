@@ -1,4 +1,5 @@
 import clientPromise from "../../lib/mongodb";
+import { PerformanceCalculation } from "./calculatePP";
 import { GetAccessToken } from "./refreshTokens";
 
 export async function GetAthleteStats(athleteId, acts) {
@@ -151,6 +152,8 @@ export async function UpdateActivities(athleteId, accessToken) {
         const startTime = 1655784000
         activities = await getActivities(startTime);
     } else {
+        // calculate performance and update DB regardless of if activities are old or not
+        await PerformanceCalculation(athleteId, accessToken);
         // return database activities, don't query db or strava API
         return existing.activities;
     }
@@ -172,6 +175,10 @@ export async function UpdateActivities(athleteId, accessToken) {
         upsert: true
     }
     await athleteActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, activitiesDBArrayFilter);
+
+    // calculate performance after updating with new activities
+    await PerformanceCalculation(athleteId, accessToken);
+
     return activities;
 }
 
@@ -263,10 +270,12 @@ export async function MultiUpdateActivities(athleteIds) {
             const startTime = 1655784000
             activities = await getActivities(startTime);
         } else {
+            // calculate performance and update DB regardless of if activities are old or not
+            await PerformanceCalculation(athleteId, accessToken)
             // break function if athlete already exists
             return;
         }
-
+        
         // update DB with new clubs, if user doesn't exist create a new entry.
         const activitiesDBFilter = {
             id: athleteId,
@@ -284,6 +293,9 @@ export async function MultiUpdateActivities(athleteIds) {
             upsert: true
         }
         await athleteActivities.findOneAndUpdate(activitiesDBFilter, activitiesDBData, activitiesDBArrayFilter);
+
+        // calculate performance after updating DB with activities for each athlete
+        await PerformanceCalculation(athleteId, accessToken)
     }
     await athleteIds.forEach(UpdateAthlete);
 }
