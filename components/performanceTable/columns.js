@@ -2,7 +2,9 @@ import styles from '../../styles/PerformanceTable.module.css'
 
 export const athleteColumns = [
     {
-        Header: 'Date',
+        Header: () => {
+            return (<div className={styles.leftHeader}>Date</div>);
+        },
         accessor: 'date',
         width: '200px',
         Cell: ({ value }) => {
@@ -25,7 +27,9 @@ export const athleteColumns = [
         }
     },
     {
-        Header: 'Title',
+        Header: () => {
+            return (<div className={styles.leftHeader}>Title</div>);
+        },
         accessor: 'title',
         width: '400px',
         Cell: ({ row }) => {
@@ -42,7 +46,9 @@ export const athleteColumns = [
         }
     },
     {
-        Header: 'Performance',
+        Header: () => {
+            return (<div className={styles.centerHeader}>Performance</div>);
+        },
         accessor: 'performance',
         width: '250px',
         Cell: ({ row }) => {
@@ -53,10 +59,17 @@ export const athleteColumns = [
             return (
                 <>
                     <div className={styles.performanceColumn}>
-                        <div>{Math.round(performance)}pp ({Math.round(weighted)}pp)</div>
+                        <div title={`${Math.round(performance * 1000) / 1000}pp`} className={styles.raw}>{Math.round(performance)}pp</div>
                     </div>
                 </>
             );
         }
+    }, 
+    {
+        Header: () => {
+            return (<div className={styles.centerHeader}>Info</div>);
+        },
+        accessor: 'hi',
+        width: '50px'
     }
 ]

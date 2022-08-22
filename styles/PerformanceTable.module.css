@@ -1,3 +1,9 @@
+.leftHeader {
+    text-align: left;
+}
+.centerHeader {
+    text-align: center;
+}
 .dateColumn {
     display: flex;
     align-items: center;
@@ -13,10 +19,17 @@
     width: 50%;
 }
 .title {
-    font-size: 0.9em;
+    font-size: 1.1em;
 }
 .performanceColumn {
-    font-size: 1em;
+    text-align: center;
+}
+.performanceColumn .raw {
+    font-size: 1.2em;
+    color: #ff8d60;
+}
+.performanceColumn .weighted {
+    font-size: 0.6em;
 }
 .breakdown {
     display: grid;
